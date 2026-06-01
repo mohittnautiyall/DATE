@@ -1,0 +1,2714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Will You Go On A Date With Me? 💕</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Pacifico&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --star-login: 130;
+    --star-main: 150;
+    --star-win: 170;
+    --rose: #ff6b9d;
+    --rose-soft: #e8a4c8;
+    --lavender: #c4b5fd;
+    --ink: #e8dff5;
+    --ink-muted: #b8a8d4;
+    --shadow: 0 0 80px rgba(255, 80, 140, 0.18), 0 30px 60px rgba(0, 0, 0, 0.55);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html {
+    height: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  html, body { height: 100%; }
+
+  /* ---------- boot loader ---------- */
+  .app-loader {
+    position: fixed; inset: 0; z-index: 10000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 18px;
+    background: linear-gradient(175deg, #050510 0%, #12082a 55%, #0d0518 100%);
+    transition: opacity 0.55s ease, visibility 0.55s ease;
+  }
+  body.ready .app-loader {
+    opacity: 0; visibility: hidden; pointer-events: none;
+  }
+  body.booting-off .app-loader { display: none; }
+  body.booting .login-gate,
+  body.booting #appRoot { visibility: hidden; }
+  .loader-glow {
+    position: absolute; width: 220px; height: 220px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 100, 160, 0.35) 0%, transparent 70%);
+    animation: loaderPulse 2s ease-in-out infinite;
+  }
+  @keyframes loaderPulse {
+    0%, 100% { transform: scale(0.92); opacity: 0.6; }
+    50% { transform: scale(1.08); opacity: 1; }
+  }
+  .loader-heart {
+    position: relative; z-index: 1;
+    font-size: 42px; color: #ff6b9d;
+    text-shadow: 0 0 24px rgba(255, 100, 160, 0.8);
+    animation: loaderHeart 1.1s ease-in-out infinite;
+  }
+  @keyframes loaderHeart {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  .loader-text {
+    position: relative; z-index: 1;
+    font-family: "Quicksand", sans-serif;
+    font-weight: 600; font-size: clamp(14px, 3.5vw, 17px);
+    color: #ffc4dc; letter-spacing: 0.04em;
+  }
+  .loader-bar {
+    position: relative; z-index: 1;
+    width: min(220px, 72vw); height: 5px;
+    border-radius: 999px; overflow: hidden;
+    background: rgba(255, 120, 180, 0.2);
+  }
+  .loader-bar-fill {
+    display: block; height: 100%; width: 0%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #ff8fab, #ff6b9d, #ffc4dc);
+    transition: width 0.35s ease;
+  }
+
+  body {
+    font-family: "Quicksand", system-ui, sans-serif;
+    background:
+      radial-gradient(ellipse 900px 620px at 50% -5%, rgba(255, 80, 140, 0.14) 0%, transparent 58%),
+      radial-gradient(ellipse 700px 480px at 85% 75%, rgba(255, 120, 180, 0.1) 0%, transparent 52%),
+      radial-gradient(900px 600px at 12% 15%, rgba(120, 40, 160, 0.35) 0%, transparent 55%),
+      radial-gradient(700px 500px at 88% 22%, rgba(200, 60, 120, 0.32) 0%, transparent 55%),
+      radial-gradient(800px 700px at 50% 100%, rgba(60, 30, 120, 0.4) 0%, transparent 50%),
+      radial-gradient(600px 400px at 70% 8%, rgba(255, 100, 160, 0.12) 0%, transparent 50%),
+      linear-gradient(175deg, #050510 0%, #0a0618 28%, #12082a 55%, #1a0a2e 78%, #0d0518 100%);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+    min-height: 100vh; min-height: 100dvh;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative; text-align: center; color: var(--ink);
+    user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    body { animation: nebulaDrift 32s ease-in-out infinite; }
+  }
+  @keyframes nebulaDrift {
+    0%, 100% { background-position: 0% 0%, 100% 100%, 0% 0%, 100% 0%, 50% 100%, 80% 0%, 0 0; }
+    50% { background-position: 2% 2%, 98% 96%, 4% 3%, 96% 2%, 48% 98%, 75% 2%, 0 0; }
+  }
+
+  /* emoji / orb floaters — disabled; shooting-star layers stay on */
+  .orb, .deco, .sparkle-ring, .scene-deco, .win-orb { display: none !important; }
+
+  .orb { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.5; z-index: 0; animation: drift 18s ease-in-out infinite; }
+  .orb.a { width: 420px; height: 420px; background: radial-gradient(circle, #a855f7 0%, #6d28d9 65%, transparent 100%); top: -120px; left: -80px; }
+  .orb.b { width: 420px; height: 420px; background: radial-gradient(circle, #f472b6 0%, #be185d 65%, transparent 100%); bottom: -100px; right: -60px; animation-delay: -5s; opacity: 0.55; }
+  .orb.c { width: 320px; height: 320px; background: radial-gradient(circle, #fb7185 0%, #9d174d 70%, transparent 100%); bottom: 12%; left: 6%; animation-delay: -9s; opacity: 0.42; }
+  @keyframes drift { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(24px,-20px) scale(1.08); } }
+
+  /* twinkling starfield */
+  #stars, .login-stars, .win-stars {
+    position: absolute; inset: 0; pointer-events: none;
+    contain: strict; content-visibility: auto;
+  }
+  #stars { position: fixed; z-index: 0; }
+  .star {
+    position: absolute; border-radius: 50%; background: #fff;
+    box-shadow: 0 0 4px rgba(255,255,255,.7);
+    animation: twk ease-in-out infinite;
+    will-change: opacity, transform;
+  }
+  .star.soft {
+    background: #ffe8f4;
+    box-shadow: 0 0 4px rgba(255,200,230,.75), 0 0 14px rgba(255,140,190,.35);
+  }
+  .star.pink {
+    background: #ffb3d9;
+    box-shadow: 0 0 8px rgba(255,120,180,.95), 0 0 18px rgba(255,80,140,.45);
+  }
+  .star.rose {
+    background: #ff9ec4;
+    box-shadow: 0 0 8px rgba(255,80,140,.95), 0 0 20px rgba(255,100,160,.55), 0 0 32px rgba(255,60,120,.2);
+  }
+  .star.blue {
+    background: #c8deff;
+    box-shadow: 0 0 7px rgba(180,210,255,.9), 0 0 16px rgba(140,180,255,.4);
+  }
+  .star.bright {
+    background: #fff;
+    box-shadow: 0 0 8px #fff, 0 0 18px rgba(255,255,255,.95), 0 0 36px rgba(255,200,230,.55);
+    animation: twkBright ease-in-out infinite;
+  }
+  @keyframes twk {
+    0%, 100% { opacity: .15; transform: scale(.45); }
+    50% { opacity: 1; transform: scale(1.05); }
+  }
+  @keyframes twkBright {
+    0%, 100% { opacity: .35; transform: scale(.55); }
+    50% { opacity: 1; transform: scale(1.35); }
+  }
+
+  .main-shooting {
+    position: fixed; inset: 0; z-index: 1;
+    pointer-events: none; overflow: visible;
+  }
+  .shooting-star {
+    position: absolute; width: var(--len, 140px); height: 4px; border-radius: 999px;
+    background: linear-gradient(90deg, rgba(255,220,240,0) 0%, rgba(255,255,255,.75) 40%, #fff 100%);
+    box-shadow: 0 0 10px #fff, 0 0 22px rgba(255,220,240,.85), 0 0 40px rgba(255,120,180,.35);
+    opacity: 0; transform: rotate(var(--angle, -35deg));
+    animation: shootStar var(--dur, 1s) ease-out forwards;
+  }
+  .shooting-star.rose {
+    background: linear-gradient(90deg, rgba(255,100,160,0) 0%, rgba(255,180,220,.85) 38%, #ffb3d9 100%);
+    box-shadow: 0 0 14px rgba(255,120,180,.98), 0 0 32px rgba(255,80,140,.6), 0 0 48px rgba(255,60,120,.25);
+  }
+  .shooting-star.blue {
+    background: linear-gradient(90deg, rgba(140,180,255,0) 0%, rgba(180,210,255,.8) 40%, #b8d4ff 100%);
+    box-shadow: 0 0 12px rgba(140,180,255,.95), 0 0 26px rgba(100,160,255,.45);
+  }
+  .shooting-star::after {
+    content: ""; position: absolute; right: -2px; top: 50%; transform: translateY(-50%);
+    width: 6px; height: 6px; border-radius: 50%; background: #fff;
+    box-shadow: 0 0 8px #fff, 0 0 16px rgba(255,255,255,.9);
+  }
+  @keyframes shootStar {
+    0% { opacity: 0; transform: translate(0, 0) rotate(var(--angle, -35deg)); }
+    5% { opacity: 1; }
+    100% { opacity: 0; transform: translate(var(--dx, 420px), var(--dy, 280px)) rotate(var(--angle, -35deg)); }
+  }
+
+  /* space corner decorations */
+  .deco { position: fixed; z-index: 1; pointer-events: none; animation: bobDeco 6s ease-in-out infinite; filter: drop-shadow(0 0 18px rgba(255,120,180,.45)); opacity: .88; }
+  @keyframes bobDeco { 0%,100%{ transform: translateY(0) rotate(-4deg);} 50%{ transform: translateY(-16px) rotate(4deg);} }
+  .deco.moon  { top: 6%; right: 7%; font-size: 56px; filter: drop-shadow(0 0 24px rgba(255,240,200,.5)); }
+  .deco.planet{ bottom: 10%; right: 9%; font-size: 48px; animation-delay: -2s; }
+  .deco.star1 { top: 14%; left: 7%; font-size: 28px; animation-duration: 7s; opacity: .7; }
+  .deco.star2 { bottom: 18%; left: 10%; font-size: 22px; animation-delay: -3s; animation-duration: 9s; opacity: .65; }
+  .deco.rocket{ top: 38%; left: 4%; font-size: 34px; animation-duration: 7s; filter: drop-shadow(0 0 14px rgba(255,100,160,.4)); }
+
+  .card {
+    position: relative; z-index: 3;
+    background: linear-gradient(160deg, rgba(30, 15, 50, 0.82), rgba(18, 8, 35, 0.78));
+    backdrop-filter: blur(22px) saturate(130%); -webkit-backdrop-filter: blur(22px) saturate(130%);
+    border-radius: 40px; padding: 40px 44px 44px; max-width: 540px; width: 92%;
+    box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 180, 220, 0.12);
+    border: 1.5px solid rgba(200, 120, 200, 0.25);
+    animation: cardPop 0.8s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+  .card::before {
+    content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; z-index: -1;
+    background: linear-gradient(135deg, rgba(255,100,160,.2), transparent 40%, rgba(140,100,255,.15));
+    opacity: .9;
+  }
+  @keyframes cardPop { 0% { transform: scale(0.5) rotate(-6deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+
+  /* ---------- character stage ---------- */
+  .char-wrap { position: relative; display: inline-grid; place-items: center; width: 230px; height: 248px; margin-bottom: 2px; }
+  .halo {
+    position: absolute; width: 200px; height: 200px; top: 26px; border-radius: 50%;
+    background: radial-gradient(circle at 50% 40%, rgba(255,180,220,.35) 0%, rgba(120,60,180,.25) 42%, rgba(20,8,40,.6) 100%);
+    box-shadow: 0 0 50px rgba(255,80,140,.35), 0 18px 40px rgba(80,40,160,.25), inset 0 -8px 18px rgba(255,120,180,.15);
+    animation: haloPulse 3.2s ease-in-out infinite;
+  }
+  @keyframes haloPulse {
+    0%,100% { transform: scale(1); box-shadow: 0 0 50px rgba(255,80,140,.35), 0 18px 40px rgba(80,40,160,.25); }
+    50% { transform: scale(1.06); box-shadow: 0 0 70px rgba(255,80,140,.55), 0 22px 52px rgba(120,60,200,.4); }
+  }
+  .sparkle-ring { position: absolute; width: 222px; height: 222px; top: 14px; pointer-events: none; animation: spin 16s linear infinite; }
+  @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+  .sparkle-ring span { position: absolute; font-size: 18px; animation: twinkle 2.4s ease-in-out infinite; }
+  .sparkle-ring span:nth-child(1){ top:0; left:50%; }
+  .sparkle-ring span:nth-child(2){ top:50%; right:0; animation-delay:.6s; }
+  .sparkle-ring span:nth-child(3){ bottom:0; left:50%; animation-delay:1.2s; }
+  .sparkle-ring span:nth-child(4){ top:50%; left:0; animation-delay:1.8s; }
+  @keyframes twinkle { 0%,100%{ opacity:.2; transform:scale(.7);} 50%{ opacity:1; transform:scale(1.2);} }
+
+  .alien-host { position: relative; z-index: 2; width: 170px; animation: alienFloat 3.6s ease-in-out infinite; cursor: pointer; touch-action: manipulation; }
+  .alien-host.sad   { animation: shiver 0.4s ease-in-out infinite; }
+  .alien-host.happy { animation: bounce 0.55s ease-in-out infinite; }
+  .alien-host.poke  { animation: alienPoke 0.5s cubic-bezier(.34,1.5,.6,1); }
+  @keyframes alienPoke { 0%,100%{ transform: scale(1) rotate(0);} 25%{ transform: scale(1.12, 0.88) rotate(-4deg);} 55%{ transform: scale(0.94, 1.06) rotate(3deg);} 80%{ transform: scale(1.05) rotate(-1deg);} }
+  @keyframes alienFloat { 0%,100%{ transform: translateY(0) rotate(-1.5deg);} 50%{ transform: translateY(-12px) rotate(1.5deg);} }
+  @keyframes shiver { 0%,100%{ transform: translateX(0) rotate(0);} 25%{ transform: translateX(-4px) rotate(-3deg);} 75%{ transform: translateX(4px) rotate(3deg);} }
+  @keyframes bounce { 0%,100%{ transform: translateY(0) scale(1);} 50%{ transform: translateY(-22px) scale(1.08);} }
+
+  .alien-svg, .alien-girl-svg { width: 100%; height: auto; display: block; overflow: visible; transition: transform .18s cubic-bezier(.34,1.6,.6,1); }
+  .alien-girl-svg { filter: drop-shadow(0 8px 8px rgba(0,0,0,.3)); animation: glowAlienGirl 2.4s ease-in-out infinite; }
+  @keyframes glowAlienGirl {
+    0%,100% { filter: drop-shadow(0 8px 8px rgba(0,0,0,.3)) drop-shadow(0 0 8px rgba(255,120,200,.45)); }
+    50%     { filter: drop-shadow(0 8px 8px rgba(0,0,0,.3)) drop-shadow(0 0 22px rgba(255,100,180,.85)); }
+  }
+  @keyframes glowG {
+    0%,100% { filter: drop-shadow(0 10px 10px rgba(0,0,0,.35)) drop-shadow(0 0 8px rgba(120,255,150,.45)); }
+    50%     { filter: drop-shadow(0 10px 10px rgba(0,0,0,.35)) drop-shadow(0 0 28px rgba(120,255,150,.85)); }
+  }
+  .alien-svg { filter: drop-shadow(0 10px 10px rgba(0,0,0,0.12)); animation: glowG 2.4s ease-in-out infinite; }
+  /* antennae + eyes reactivity */
+  .alien-svg .antennae { transform-box: fill-box; transform-origin: 50% 100%; animation: antWiggle 2.6s ease-in-out infinite; }
+  @keyframes antWiggle { 0%,100%{ transform: rotate(-5deg);} 50%{ transform: rotate(5deg);} }
+  .alien-svg.happy .antennae, .alien-host.happy .alien-svg .antennae { animation: antExcited 0.32s ease-in-out infinite; }
+  @keyframes antExcited { 0%,100%{ transform: rotate(-14deg);} 50%{ transform: rotate(14deg);} }
+  .alien-svg.sad .antennae { animation: antDroop .6s ease forwards; }
+  @keyframes antDroop { to { transform: rotate(0deg) translateY(8px) scaleY(.78); } }
+  .alien-svg.scared .antennae { animation: antScared 0.18s ease-in-out infinite; }
+  @keyframes antScared { 0%,100%{ transform: rotate(-8deg) translateY(2px);} 50%{ transform: rotate(8deg) translateY(4px);} }
+  .alien-svg .arms { transform-box: fill-box; transform-origin: 50% 0; transition: transform .15s ease; }
+  .alien-svg.happy .arms { animation: wave .35s ease-in-out infinite; }
+  .alien-svg.poked .arms { animation: wave .22s ease-in-out 3; }
+  @keyframes wave { 0%,100%{ transform: rotate(-7deg);} 50%{ transform: rotate(7deg);} }
+  .alien-svg .eyes { transition: transform .1s ease-out; }
+  .alien-svg .lid { transform-box: fill-box; transform-origin: 50% 0%; transform: scaleY(0); animation: none; }
+  .alien-girl-svg .lid { transform-box: fill-box; transform-origin: 50% 0%; transform: scaleY(0); animation: none; }
+  .char-wrap:hover .alien-host:not(.sad) .alien-svg:not(.scared) { filter: drop-shadow(0 10px 10px rgba(0,0,0,.35)) drop-shadow(0 0 20px rgba(120,255,150,.75)); }
+  .alien-svg .bouquet { animation: bouquetSway 2.8s ease-in-out infinite; transform-origin: 148px 145px; transform-box: fill-box; pointer-events: none; }
+  @keyframes bouquetSway { 0%,100%{ transform: rotate(-4deg);} 50%{ transform: rotate(4deg);} }
+  .pop-reaction { position: absolute; z-index: 6; pointer-events: none; font-size: 22px; animation: popUp 0.9s ease-out forwards; }
+
+  /* teardrops */
+  .tear { position: absolute; pointer-events: none; z-index: 5; opacity: 0; }
+  .tear.show { animation: cry 1.3s ease-in forwards; }
+  @keyframes cry { 0%{ opacity:0; transform: translateY(-4px) scale(.4);} 20%{ opacity:1;} 100%{ opacity:0; transform: translateY(95px) scale(1.05);} }
+  /* little heart that pops above the alien when you hover Yes */
+  .pop-heart { position: absolute; z-index: 6; pointer-events: none; font-size: 26px; animation: popUp 1s ease-out forwards; }
+  @keyframes popUp { 0%{ opacity:0; transform: translateY(0) scale(.4);} 25%{ opacity:1;} 100%{ opacity:0; transform: translateY(-70px) scale(1.2);} }
+
+  h1 { font-family: "Pacifico", cursive; font-size: 31px; color: var(--rose); margin: 6px 0 8px; letter-spacing: .5px; line-height: 1.35; text-shadow: 0 0 30px rgba(255,80,140,.5), 0 2px 8px rgba(0,0,0,.4); }
+  .subtitle { font-family: "Cormorant Garamond", Georgia, serif; font-size: 20px; font-weight: 500; font-style: italic; color: var(--rose-soft); margin-bottom: 26px; min-height: 24px; letter-spacing: .3px; }
+
+  .buttons { display: flex; gap: 18px; justify-content: center; align-items: center; flex-wrap: wrap; position: relative; min-height: 70px; }
+  button { font-family: "Quicksand", sans-serif; font-weight: 700; border: none; cursor: pointer; border-radius: 50px; transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s ease, background 0.3s ease; outline: none; letter-spacing: .3px; }
+
+  #yesBtn { background: linear-gradient(135deg, #ff6b9d, #c026d3); color: #fff; padding: 17px 46px; font-size: 22px;
+    box-shadow: 0 10px 0 #7e1060, 0 0 40px rgba(255,80,160,.35), 0 16px 30px rgba(180,40,120,.4), inset 0 2px 0 rgba(255,255,255,.25); position: relative; overflow: hidden; animation: yesGlow 1.9s ease-in-out infinite; }
+  @keyframes yesGlow {
+    0%,100% { box-shadow: 0 10px 0 #7e1060, 0 0 40px rgba(255,80,160,.35), 0 16px 30px rgba(180,40,120,.4), inset 0 2px 0 rgba(255,255,255,.25); }
+    50%     { box-shadow: 0 10px 0 #7e1060, 0 0 60px rgba(255,80,160,.6), 0 20px 46px rgba(200,60,180,.55), inset 0 2px 0 rgba(255,255,255,.25); }
+  }
+  #yesBtn::after { content: ""; position: absolute; top: 0; left: -120%; width: 60%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,.6), transparent); transform: skewX(-20deg); animation: shine 3.2s ease-in-out infinite; }
+  @keyframes shine { 0%,60%{ left:-120%;} 100%{ left:140%;} }
+  #yesBtn:hover { transform: translateY(-4px) scale(1.06); }
+  #yesBtn:active { transform: translateY(5px); }
+
+  #noBtn { background: linear-gradient(135deg, #3d3560, #2a2448); color: #b8a8d4; padding: 15px 38px; font-size: 20px; box-shadow: 0 8px 0 #151028, 0 12px 22px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.08); border: 1px solid rgba(180,140,220,.2); }
+  #noBtn:hover { transform: translateY(-3px) scale(1.04); }
+  #noBtn:active { transform: translateY(4px); }
+  #noBtn.runaway { position: fixed; z-index: 60; transition: top 0.22s cubic-bezier(.34,1.56,.64,1), left 0.22s cubic-bezier(.34,1.56,.64,1), transform 0.22s ease; }
+
+  .hint { margin-top: 20px; font-size: 13.5px; font-weight: 600; color: var(--ink-muted); min-height: 18px; opacity: .85; }
+
+  /* ---------- trademark ---------- */
+  .trademark {
+    position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%); z-index: 6;
+    font-family: "Pacifico", cursive; font-size: 15px; color: var(--rose-soft);
+    background: rgba(20, 10, 35, 0.72); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    padding: 7px 20px; border-radius: 30px; border: 1px solid rgba(200, 120, 200, 0.22);
+    box-shadow: 0 0 24px rgba(255,80,140,.15), 0 6px 20px rgba(0,0,0,.35); display: flex; align-items: center; gap: 7px; white-space: nowrap;
+    animation: tmFloat 4s ease-in-out infinite;
+  }
+  @keyframes tmFloat { 0%,100%{ transform: translateX(-50%) translateY(0);} 50%{ transform: translateX(-50%) translateY(-5px);} }
+  .trademark b { color: var(--rose); text-shadow: 0 0 12px rgba(255,80,140,.4); }
+  .trademark .hb { display: inline-block; animation: heartbeat 1.2s ease-in-out infinite; }
+  @keyframes heartbeat { 0%,100%{ transform: scale(1);} 22%{ transform: scale(1.35);} 40%{ transform: scale(1);} 60%{ transform: scale(1.2);} }
+
+  /* ---------- LOGIN GATE ---------- */
+  body.locked { overflow: hidden; }
+  body.locked #appRoot {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+  }
+  #appRoot:not([aria-hidden="true"]) {
+    display: block;
+  }
+  .login-gate {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px 16px 70px;
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.22,1,.36,1);
+    background:
+      radial-gradient(ellipse 85% 60% at 50% 35%, rgba(255, 80, 140, 0.1) 0%, transparent 58%),
+      radial-gradient(ellipse 55% 45% at 15% 85%, rgba(200, 60, 140, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 90% 15%, rgba(160, 80, 220, 0.1) 0%, transparent 52%);
+  }
+  .login-gate.unlock-out {
+    opacity: 0; transform: scale(1.06);
+    pointer-events: none;
+  }
+  .login-gate .login-stars {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  }
+  .login-gate .login-shooting {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  }
+  .login-card {
+    position: relative; z-index: 210;
+    pointer-events: auto;
+    background: linear-gradient(160deg, rgba(30, 15, 50, 0.88), rgba(18, 8, 35, 0.84));
+    backdrop-filter: blur(22px) saturate(130%); -webkit-backdrop-filter: blur(22px) saturate(130%);
+    border-radius: 36px; padding: 38px 34px 32px; max-width: 460px; width: 94%;
+    box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 180, 220, 0.12);
+    border: 1.5px solid rgba(200, 120, 200, 0.28);
+    animation: cardPop 0.85s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+  .login-card::before {
+    content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; z-index: -1;
+    background: linear-gradient(135deg, rgba(255,100,160,.22), transparent 40%, rgba(140,100,255,.16));
+  }
+  .login-card.shake { animation: loginShake 0.55s cubic-bezier(.36,.07,.19,.97); }
+  @keyframes loginShake {
+    0%,100% { transform: translateX(0); }
+    18% { transform: translateX(-10px) rotate(-1deg); }
+    36% { transform: translateX(9px) rotate(1deg); }
+    54% { transform: translateX(-7px); }
+    72% { transform: translateX(6px); }
+  }
+  .login-head-stage {
+    text-align: center;
+    margin-bottom: 16px;
+    height: clamp(168px, 32vw, 196px);
+  }
+  .login-badge-slot,
+  .login-title-slot,
+  .login-sub-slot {
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; width: 100%;
+  }
+  .login-badge-slot { height: 36px; margin-bottom: 6px; }
+  .login-title-slot { height: clamp(72px, 14vw, 84px); margin-bottom: 4px; }
+  .login-sub-slot { height: clamp(60px, 12vw, 70px); }
+  .login-head-text {
+    width: 100%;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.75s ease, transform 0.75s cubic-bezier(.22, 1, .36, 1);
+    will-change: opacity, transform;
+  }
+  .login-head-text.swap-out {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  .login-head-text.swap-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: none;
+  }
+  .login-card h1.login-head-text {
+    font-family: "Pacifico", cursive; font-size: clamp(21px, 4.6vw, 27px);
+    color: var(--rose); margin: 0;
+    text-shadow: 0 0 30px rgba(255,80,140,.5);
+    line-height: 1.35;
+  }
+  .login-sub.login-head-text {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(15px, 3.2vw, 18px); font-style: italic;
+    color: var(--rose-soft); margin: 0; line-height: 1.5;
+  }
+  .login-badge.login-head-text {
+    display: inline-block;
+    font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 10px;
+    letter-spacing: 1.8px; text-transform: uppercase; color: #ffb3d9;
+    background: rgba(255,80,140,.12); border: 1px solid rgba(255,120,180,.32);
+    padding: 5px 14px; border-radius: 30px;
+    box-shadow: 0 0 18px rgba(255,80,140,.15);
+  }
+  .login-format {
+    font-family: "Quicksand", sans-serif; font-weight: 600; font-size: clamp(11px, 2.6vw, 12px);
+    letter-spacing: 0.28em; text-transform: lowercase; color: var(--rose-soft);
+    opacity: 0.55; margin-bottom: 8px; white-space: nowrap;
+  }
+  .pin-display {
+    display: flex; align-items: center; justify-content: center;
+    flex-wrap: nowrap; gap: clamp(3px, 1vw, 6px);
+    margin-bottom: 10px; width: 100%; max-width: 380px; margin-left: auto; margin-right: auto;
+  }
+  .pin-group { display: flex; align-items: center; gap: clamp(3px, 1vw, 5px); flex-shrink: 0; }
+  .pin-slot {
+    width: clamp(28px, 7.2vw, 36px); height: clamp(38px, 9vw, 46px);
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: rgba(255,255,255,.06); border: 1.5px solid rgba(200,120,200,.3);
+    display: grid; place-items: center;
+    font-family: "Quicksand", sans-serif; font-weight: 700; font-size: clamp(16px, 3.8vw, 20px);
+    color: #fff; transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,.2);
+  }
+  .pin-slot.filled {
+    border-color: rgba(255,120,180,.55);
+    box-shadow: 0 0 16px rgba(255,80,140,.25), inset 0 2px 8px rgba(0,0,0,.15);
+    transform: scale(1.04);
+  }
+  .pin-slot.active {
+    border-color: var(--rose);
+    box-shadow: 0 0 20px rgba(255,80,140,.4);
+    animation: pinPulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pinPulse {
+    0%,100% { box-shadow: 0 0 16px rgba(255,80,140,.3); }
+    50% { box-shadow: 0 0 28px rgba(255,80,140,.55); }
+  }
+  .pin-dash {
+    font-family: "Quicksand", sans-serif; font-weight: 700; font-size: clamp(18px, 4vw, 22px);
+    color: var(--rose); opacity: .85; margin: 0 clamp(2px, 1vw, 6px); flex-shrink: 0;
+    text-shadow: 0 0 12px rgba(255,80,140,.4);
+  }
+  .login-hint {
+    font-size: 13px; font-weight: 600; color: var(--ink-muted);
+    min-height: 44px; margin-bottom: 14px; transition: color 0.25s;
+    line-height: 1.45; padding: 0 4px;
+  }
+  .login-hint.oops { color: #ff8ab8; }
+  .login-hint.yay { color: #ffb3d9; text-shadow: 0 0 20px rgba(255,80,140,.35); }
+  .login-hearts {
+    display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+    margin-bottom: 14px;
+  }
+  .login-hearts span {
+    font-family: "Quicksand", sans-serif; font-weight: 600; font-size: 10px;
+    color: #f5e8ff; background: rgba(255, 120, 180, 0.1);
+    border: 1px solid rgba(255, 120, 180, 0.28);
+    padding: 4px 10px; border-radius: 14px;
+    box-shadow: 0 0 12px rgba(255, 80, 140, 0.08);
+  }
+  .login-spark {
+    position: fixed; pointer-events: none; z-index: 215; font-size: 18px;
+    animation: loginSpark 1.1s ease-out forwards;
+  }
+  @keyframes loginSpark {
+    0% { opacity: 0; transform: scale(0.3) translateY(0); }
+    20% { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 0; transform: scale(0.8) translateY(-50px); }
+  }
+  .login-card.success-pop { animation: loginSuccess 0.65s cubic-bezier(.34,1.4,.6,1); }
+  @keyframes loginSuccess {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.04); box-shadow: 0 0 60px rgba(255,80,140,.45), var(--shadow); }
+    100% { transform: scale(1); }
+  }
+  .pin-pad {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    max-width: 300px; margin: 0 auto 16px;
+    position: relative; z-index: 3; pointer-events: auto;
+  }
+  .pin-key {
+    font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 20px;
+    padding: 14px 0; border-radius: 16px; border: none; cursor: pointer;
+    background: linear-gradient(135deg, rgba(60, 40, 90, 0.9), rgba(40, 28, 68, 0.95));
+    color: #e8dff5; border: 1px solid rgba(180,140,220,.22);
+    box-shadow: 0 5px 0 #151028, 0 8px 16px rgba(0,0,0,.35);
+    transition: transform 0.15s cubic-bezier(.34,1.56,.64,1), box-shadow 0.15s ease;
+  }
+  .pin-key:hover { transform: translateY(-2px) scale(1.04); }
+  .pin-key:active { transform: translateY(3px); box-shadow: 0 2px 0 #151028; }
+  .pin-key.wide { grid-column: span 1; font-size: 14px; }
+  .pin-key.enter {
+    grid-column: span 3;
+    background: linear-gradient(135deg, #ff6b9d, #c026d3); color: #fff;
+    font-size: 17px; padding: 15px;
+    box-shadow: 0 8px 0 #7e1060, 0 0 32px rgba(255,80,160,.3);
+    border: none;
+    animation: yesGlow 2.2s ease-in-out infinite;
+  }
+  .pin-key.enter:hover { transform: translateY(-3px) scale(1.02); }
+  .pin-key.enter:active { transform: translateY(4px); box-shadow: 0 3px 0 #7e1060; }
+  .login-gate .trademark { z-index: 220; }
+
+  /* ---------- WIN SCREEN — full viewport cinematic ---------- */
+  .win {
+    display: none; position: fixed; inset: 0; z-index: 100;
+    flex-direction: column; overflow: hidden;
+    background: #0a0512;
+    content-visibility: hidden;
+    contain: layout style paint;
+  }
+  .win.show {
+    display: flex;
+    content-visibility: visible;
+    overflow-x: hidden;
+    overflow-y: visible;
+    animation: winReveal 0.7s cubic-bezier(.22,1,.36,1);
+  }
+  @keyframes winReveal { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: scale(1); } }
+
+  .win-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .win-nebula {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(900px 650px at 12% 18%, rgba(255, 80, 140, 0.38) 0%, transparent 55%),
+      radial-gradient(750px 550px at 88% 22%, rgba(200, 60, 120, 0.32) 0%, transparent 52%),
+      radial-gradient(700px 600px at 72% 82%, rgba(180, 80, 255, 0.26) 0%, transparent 50%),
+      radial-gradient(650px 500px at 22% 78%, rgba(255, 120, 180, 0.24) 0%, transparent 48%),
+      radial-gradient(500px 420px at 50% 48%, rgba(255, 180, 220, 0.1) 0%, transparent 58%),
+      linear-gradient(175deg, #050510 0%, #0a0618 28%, #12082a 55%, #1a0a2e 78%, #0d0518 100%);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+    animation: winNebulaDrift 22s ease-in-out infinite;
+  }
+  @keyframes winNebulaDrift {
+    0%, 100% { background-position: 0% 0%, 100% 0%, 80% 100%, 20% 100%, 50% 50%, 0 0; filter: brightness(1); }
+    50% { background-position: 3% 2%, 97% 3%, 78% 98%, 22% 96%, 48% 52%, 0 0; filter: brightness(1.05); }
+  }
+  .win-aurora {
+    position: absolute; inset: -15% -8%;
+    background:
+      linear-gradient(108deg, transparent 28%, rgba(255, 120, 180, 0.12) 42%, rgba(255, 80, 140, 0.2) 48%, rgba(200, 100, 255, 0.1) 54%, transparent 66%),
+      linear-gradient(72deg, transparent 32%, rgba(255, 180, 220, 0.08) 46%, rgba(255, 100, 160, 0.14) 52%, transparent 64%);
+    animation: winAurora 14s ease-in-out infinite;
+    mix-blend-mode: screen; opacity: .75;
+  }
+  @keyframes winAurora {
+    0%, 100% { transform: translateX(-2%) skewX(-5deg); opacity: .65; }
+    50% { transform: translateX(3%) skewX(4deg); opacity: .9; }
+  }
+  .win-glow {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 85% 65% at 50% 52%, rgba(255, 100, 160, 0.16) 0%, rgba(180, 60, 200, 0.07) 38%, transparent 68%),
+      radial-gradient(ellipse 50% 40% at 30% 70%, rgba(255, 140, 190, 0.1) 0%, transparent 60%);
+    animation: winGlowBeat 3s ease-in-out infinite;
+  }
+  @keyframes winGlowBeat {
+    0%, 100% { opacity: .7; transform: scale(1); }
+    20% { opacity: 1; transform: scale(1.02); }
+    40% { opacity: .75; transform: scale(1); }
+  }
+  .win-orb {
+    position: absolute; border-radius: 50%; filter: blur(75px);
+    animation: winOrbFloat 16s ease-in-out infinite; pointer-events: none;
+  }
+  .win-orb.rose {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255, 80, 140, 0.55) 0%, transparent 70%);
+    top: 8%; left: -6%; opacity: .5;
+  }
+  .win-orb.lilac {
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, rgba(200, 100, 255, 0.45) 0%, transparent 70%);
+    bottom: 12%; right: -5%; animation-delay: -5s; opacity: .42;
+  }
+  .win-orb.blush {
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(255, 160, 200, 0.4) 0%, transparent 70%);
+    top: 42%; left: 52%; animation-delay: -9s; opacity: .35;
+  }
+  @keyframes winOrbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(16px, -18px) scale(1.1); }
+  }
+  .win-dust {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(ellipse 100% 80% at 50% 100%, rgba(255, 100, 160, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 50% at 0% 40%, rgba(255, 140, 190, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 45% at 100% 30%, rgba(200, 100, 255, 0.07) 0%, transparent 50%);
+    animation: winDustShift 18s ease-in-out infinite;
+  }
+  @keyframes winDustShift {
+    0%, 100% { opacity: .85; }
+    50% { opacity: 1; }
+  }
+
+  /* star sky — behind transparent scene, stars shine through pink haze */
+  .win-sky {
+    position: absolute; inset: 0; z-index: 2;
+    pointer-events: none; overflow: hidden;
+  }
+  .win-sky::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 90% 70% at 50% 40%, transparent 30%, rgba(26, 8, 40, 0.18) 100%);
+  }
+  .win-stars { position: absolute; inset: 0; }
+  .win-stars .star { animation: winTwinkle ease-in-out infinite; }
+  @keyframes winTwinkle {
+    0%, 100% { opacity: .4; transform: scale(0.65); }
+    50% { opacity: 1; transform: scale(1.25); }
+  }
+  .win-stars .star.bright { animation: winTwinkleBright ease-in-out infinite; }
+  @keyframes winTwinkleBright {
+    0%, 100% { opacity: .5; transform: scale(0.75); }
+    50% { opacity: 1; transform: scale(1.55); }
+  }
+  .win-shooting {
+    position: absolute; inset: 0; z-index: 12;
+    overflow: visible; pointer-events: none;
+  }
+
+  .scene {
+    position: absolute; inset: 0; z-index: 4;
+    overflow: hidden; isolation: isolate;
+    background:
+      radial-gradient(ellipse 110% 75% at 50% 0%, rgba(255, 100, 160, 0.14) 0%, transparent 52%),
+      radial-gradient(ellipse 85% 55% at 50% 100%, rgba(180, 60, 140, 0.16) 0%, transparent 55%);
+  }
+  .scene-vignette {
+    position: absolute; inset: 0; pointer-events: none; z-index: 22;
+    background:
+      radial-gradient(ellipse 82% 78% at 50% 45%, transparent 48%, rgba(30, 8, 28, 0.35) 100%),
+      radial-gradient(ellipse 55% 45% at 50% 50%, rgba(255, 80, 140, 0.06) 0%, transparent 70%);
+  }
+  .scene-cine-bar {
+    position: absolute; left: 0; right: 0; z-index: 24; pointer-events: none;
+    background: #000; opacity: .88;
+  }
+  .scene-cine-bar.top { top: 0; height: clamp(28px, 7vh, 56px); opacity: .5; }
+  .scene-cine-bar.bot { bottom: 0; height: clamp(22px, 5vh, 44px); opacity: .5; }
+
+  .scene-stage {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -54%);
+    width: min(340px, 76vw); height: min(260px, 34vh);
+    z-index: 5;
+  }
+  @keyframes stageWobble {
+    0%,100% { transform: translate(-50%, -54%); }
+    25% { transform: translate(calc(-50% - 4px), calc(-54% + 3px)); }
+    75% { transform: translate(calc(-50% + 4px), calc(-54% - 2px)); }
+  }
+  .scene::before { display: none; }
+  .scene-deco {
+    position: absolute; pointer-events: none; font-size: clamp(28px, 5vw, 52px);
+    filter: drop-shadow(0 0 16px rgba(255,120,180,.5)); opacity: .75;
+    animation: bobDeco 5s ease-in-out infinite;
+  }
+  .scene-deco.m1 { top: 8%; left: 8%; animation-delay: -1s; }
+  .scene-deco.m2 { top: 12%; right: 10%; font-size: clamp(22px, 4vw, 40px); animation-delay: -2.5s; }
+  .scene-deco.m3 { bottom: 28%; left: 6%; font-size: clamp(20px, 3.5vw, 36px); animation-delay: -0.5s; }
+  .scene-deco.m4 { bottom: 32%; right: 7%; animation-delay: -3s; }
+  .scene-deco.m5 { top: 22%; left: 18%; font-size: clamp(18px, 3vw, 32px); animation-delay: -1.8s; opacity: .65; }
+  .scene-deco.m6 { top: 20%; right: 16%; font-size: clamp(16px, 2.8vw, 28px); animation-delay: -4s; opacity: .6; }
+
+  .scene-caption {
+    position: absolute; left: 50%; top: 15%;
+    transform: translateX(-50%) translateY(10px) scale(0.97);
+    z-index: 26; pointer-events: none; text-align: center;
+    font-family: "Pacifico", cursive; font-size: clamp(15px, 2.9vw, 23px);
+    line-height: 1.4; letter-spacing: 0.01em;
+    color: #fff;
+    text-shadow:
+      0 0 28px rgba(255, 90, 160, 0.75),
+      0 2px 0 rgba(90, 20, 60, 0.85),
+      0 4px 18px rgba(0, 0, 0, 0.55);
+    opacity: 0; max-width: min(90vw, 400px); white-space: normal;
+    padding: 10px 20px; box-sizing: border-box;
+    background: linear-gradient(135deg, rgba(18, 10, 36, 0.72), rgba(40, 16, 48, 0.58));
+    border: 1px solid rgba(255, 140, 200, 0.28);
+    border-radius: 999px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    filter: blur(6px);
+    will-change: opacity, transform, filter;
+    transition:
+      opacity 1.15s cubic-bezier(0.33, 0, 0.2, 1),
+      transform 1.15s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .scene-caption.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+    filter: blur(0);
+  }
+  .scene-caption.hide {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-8px) scale(0.96);
+    filter: blur(8px);
+  }
+
+  .mover {
+    position: absolute;
+    will-change: transform, opacity;
+    transition: transform 1.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.9s ease;
+  }
+
+  .s-boy  { left: 42%; bottom: 2%; width: 20%; margin-left: 0; z-index: 4; transform-origin: center bottom; }
+  .s-girl { left: 58%; bottom: 2%; width: 20%; margin-left: 0; z-index: 4; transform-origin: center bottom; }
+  .s-boy.in-beam, .s-girl.in-beam { z-index: 5; }
+
+  .s-ufo {
+    left: 50%; top: -14%; width: 82%;
+    margin-left: -41%;
+    z-index: 6; pointer-events: none;
+  }
+  .ufo-wrap {
+    position: relative; width: 100%; line-height: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  .ufo-wrap.parked { animation: ufoHover 5s ease-in-out infinite; }
+  @keyframes ufoHover {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -5px, 0); }
+  }
+
+  .ufo-svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .ufo-svg .ufo-beam {
+    transform-origin: 200px 148px;
+    animation: beamPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes beamPulse {
+    0%, 100% { opacity: 0.72; transform: scaleY(1); }
+    50% { opacity: 0.92; transform: scaleY(1.04); }
+  }
+  .ufo-svg .rim-lite { animation: rimBlink 1.8s ease-in-out infinite; }
+  .ufo-svg .rim-lite:nth-child(2) { animation-delay: -0.3s; }
+  .ufo-svg .rim-lite:nth-child(3) { animation-delay: -0.6s; }
+  .ufo-svg .rim-lite:nth-child(4) { animation-delay: -0.9s; }
+  .ufo-svg .rim-lite:nth-child(5) { animation-delay: -1.2s; }
+  .ufo-svg .rim-lite:nth-child(6) { animation-delay: -1.5s; }
+  @keyframes rimBlink { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+  .ufo-svg .portal-glow { animation: portalPulse 1.6s ease-in-out infinite; }
+  @keyframes portalPulse { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+
+  .mover.abducting { transition: none !important; filter: brightness(1.4) drop-shadow(0 0 14px rgba(180,255,230,.7)); }
+
+  .tractor-beam, .beam-spot { display: none !important; }
+
+  .win-overlay {
+    position: absolute; inset: 0; z-index: 30; pointer-events: none;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    padding: 0 16px clamp(28px, 7vh, 56px);
+    overflow: visible;
+    background:
+      linear-gradient(to top, rgba(18, 6, 22, .94) 0%, rgba(26, 8, 32, .72) 16%, rgba(40, 10, 36, .18) 30%, transparent 42%),
+      radial-gradient(ellipse 85% 55% at 50% 100%, rgba(255, 80, 140, 0.14) 0%, transparent 62%);
+  }
+  .win-overlay-stack {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: min(96vw, 520px);
+    padding-bottom: 10px;
+    pointer-events: none;
+  }
+  .win-badge {
+    pointer-events: none; margin: 0;
+    font-family: "Quicksand", sans-serif; font-weight: 700; font-size: clamp(9px, 1.55vw, 12px);
+    letter-spacing: 1.8px; text-transform: uppercase; color: #ffb3d9;
+    background: rgba(255,80,140,.15); border: 1px solid rgba(255,120,180,.35);
+    padding: 6px 15px; border-radius: 30px;
+    line-height: 1.3;
+    white-space: nowrap;
+    animation: badgeStamp 0.6s cubic-bezier(.34,1.5,.6,1) 0.3s both;
+    box-shadow: 0 0 20px rgba(255,80,140,.2);
+  }
+  @keyframes badgeStamp { 0% { opacity:0; transform: scale(2) rotate(-8deg); } 100% { opacity:1; transform: scale(1) rotate(0); } }
+
+  .win h2 {
+    pointer-events: none; font-family: "Pacifico", cursive;
+    font-size: clamp(17px, 3.5vw, 28px); color: var(--rose);
+    margin: 0;
+    padding: 0 clamp(8px, 3vw, 16px);
+    line-height: 1.35;
+    max-width: 100%;
+    text-align: center;
+    text-shadow: 0 0 30px rgba(255,80,140,.5), 0 2px 10px rgba(0,0,0,.5);
+    animation: winTitleIn 0.8s cubic-bezier(.34,1.3,.6,1) 0.15s both;
+  }
+  @keyframes winTitleIn { 0% { opacity:0; transform: translateY(20px) scale(0.9); } 100% { opacity:1; transform: translateY(0) scale(1); } }
+
+  .win p {
+    pointer-events: none; font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(13px, 2.2vw, 16px); font-weight: 500; font-style: italic;
+    color: var(--rose-soft); max-width: 480px; line-height: 1.4; margin-bottom: 8px;
+    animation: winTitleIn 0.8s cubic-bezier(.34,1.3,.6,1) 0.35s both;
+  }
+
+  .win-chips {
+    pointer-events: none; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+    margin-bottom: 10px; animation: winTitleIn 0.8s cubic-bezier(.34,1.3,.6,1) 0.5s both;
+  }
+  .win-chips span {
+    font-family: "Quicksand", sans-serif; font-weight: 600; font-size: clamp(10px, 1.8vw, 12px);
+    color: #f5e8ff; background: rgba(255, 120, 180, 0.12); border: 1px solid rgba(255, 120, 180, 0.32);
+    padding: 4px 11px; border-radius: 16px; backdrop-filter: blur(8px);
+    box-shadow: 0 0 16px rgba(255, 80, 140, 0.1);
+  }
+
+  .win .replay {
+    position: relative; z-index: 50;
+    pointer-events: auto; margin: 0;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ff6b9d, #c026d3); color: #fff;
+    padding: clamp(8px, 1.7vw, 11px) clamp(18px, 3.8vw, 30px);
+    font-size: clamp(12px, 2.1vw, 14px); border-radius: 50px;
+    box-shadow: 0 7px 0 #7e1060, 0 0 40px rgba(255,80,160,.35), 0 12px 28px rgba(180,40,120,.45);
+    animation: winTitleIn 0.8s cubic-bezier(.34,1.3,.6,1) 0.65s both, yesGlow 2s ease-in-out 1.5s infinite;
+  }
+  .win .replay:active { transform: translateY(4px); box-shadow: 0 3px 0 #7e1060; }
+
+  /* ---------- post-UFO: emotional love finale ---------- */
+  .win-afterglow {
+    position: absolute; inset: 0; z-index: 18;
+    pointer-events: none; overflow: hidden;
+    opacity: 0; visibility: hidden;
+    transition: opacity 2.4s cubic-bezier(0.33, 0, 0.2, 1), visibility 0s linear 2.4s;
+  }
+  .win-afterglow.live {
+    opacity: 1; visibility: visible;
+    transition: opacity 2.4s cubic-bezier(0.33, 0, 0.2, 1), visibility 0s;
+  }
+  .win.afterglow .scene { opacity: 0; transition: opacity 1.2s ease; }
+  .win.afterglow .win-overlay {
+    opacity: 1; pointer-events: none;
+    z-index: 40;
+    padding-bottom: clamp(28px, 7vh, 56px);
+    background: linear-gradient(to top, rgba(18, 6, 22, 0.94) 0%, rgba(26, 8, 32, 0.4) 24%, transparent 52%);
+    transition: opacity 1.2s ease;
+  }
+  .win.afterglow .win-overlay-stack {
+    gap: 14px;
+  }
+  .win.afterglow .win-overlay .win-badge,
+  .win.afterglow .win-overlay h2 {
+    display: none;
+  }
+  .win.afterglow .win-overlay .replay {
+    pointer-events: auto !important;
+    z-index: 60;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    animation: winTitleIn 0.8s cubic-bezier(0.34, 1.3, 0.6, 1) 0.2s both, yesGlow 2s ease-in-out 1.2s infinite;
+  }
+
+  .afterglow-hearts-field {
+    position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  }
+  .float-heart {
+    position: absolute; bottom: -8%;
+    font-size: clamp(14px, 3vw, 22px);
+    opacity: 0;
+    filter: blur(0);
+    animation: floatHeartUp linear infinite;
+    text-shadow: 0 0 20px rgba(255, 100, 160, 0.55);
+  }
+  @keyframes floatHeartUp {
+    0% { opacity: 0; transform: translateY(0) scale(0.6) rotate(0deg); }
+    8% { opacity: 0.85; }
+    85% { opacity: 0.5; }
+    100% { opacity: 0; transform: translateY(-115vh) scale(1.1) rotate(25deg); }
+  }
+
+  .infinity-stage {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: clamp(12px, 2.4vh, 22px);
+    padding: clamp(24px, 6vh, 48px) clamp(12px, 3.5vw, 24px) clamp(100px, 16vh, 132px);
+    box-sizing: border-box;
+    z-index: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  .infinity-stage::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 95% 80% at 50% 38%, rgba(255, 90, 150, 0.22) 0%, transparent 65%),
+      radial-gradient(circle at 20% 80%, rgba(192, 38, 211, 0.12) 0%, transparent 40%),
+      radial-gradient(circle at 80% 75%, rgba(255, 120, 180, 0.1) 0%, transparent 38%);
+  }
+  .ag-line {
+    position: relative; z-index: 2;
+    margin: 0;
+    width: auto;
+    max-width: 98vw;
+    padding: 0 clamp(4px, 1.5vw, 10px);
+    text-align: center;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(8px);
+    flex-shrink: 0;
+  }
+  .win-afterglow.live .ag-line {
+    animation: agLineReveal 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .win-afterglow.live .ag-d1 { animation-delay: 0.6s; }
+  .win-afterglow.live .ag-d2 { animation-delay: 2.1s; }
+  @keyframes agLineReveal {
+    0% { opacity: 0; transform: translateY(18px); filter: blur(8px); }
+    100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+
+  .afterglow-prelude {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(14px, 3.3vw, 26px);
+    font-weight: 500; font-style: italic;
+    color: rgba(255, 220, 235, 0.92);
+    line-height: 1.2;
+    text-shadow: 0 0 30px rgba(255, 100, 160, 0.35);
+  }
+  .afterglow-prelude2 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(13px, 3.1vw, 24px);
+    font-weight: 600; font-style: italic;
+    color: #ffc4dc;
+    line-height: 1.2;
+  }
+  .afterglow-vow {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(13px, 3vw, 27px);
+    font-weight: 600; font-style: italic;
+    color: #fff5f9;
+    line-height: 1.2;
+    white-space: nowrap;
+    text-shadow: 0 0 40px rgba(255, 100, 160, 0.45);
+  }
+  .afterglow-sign {
+    font-family: "Pacifico", cursive;
+    font-size: clamp(22px, 4.7vw, 33px);
+    color: #ffb3d9;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+    text-shadow: 0 0 36px rgba(255, 100, 160, 0.55);
+  }
+
+  .afterglow-tag {
+    display: inline-block;
+    position: relative; z-index: 2;
+    margin: clamp(4px, 1vh, 10px) 0;
+    font-family: "Quicksand", sans-serif;
+    font-weight: 700; font-size: clamp(11px, 2.15vw, 14px);
+    letter-spacing: 0.28em; text-transform: uppercase;
+    color: #ffd0e8;
+    padding: 8px 22px;
+    border: 1px solid rgba(255, 160, 210, 0.55);
+    border-radius: 999px;
+    background: rgba(255, 80, 140, 0.14);
+    text-shadow:
+      0 0 10px rgba(255, 200, 230, 0.9),
+      0 0 22px rgba(255, 120, 180, 0.55);
+    box-shadow:
+      0 0 20px rgba(255, 90, 150, 0.35),
+      0 0 40px rgba(255, 60, 120, 0.22),
+      inset 0 0 14px rgba(255, 140, 200, 0.1);
+  }
+  .afterglow-tag::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: inherit;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(ellipse 100% 80% at 50% 50%, rgba(255, 100, 160, 0.4) 0%, transparent 72%);
+    opacity: 0.65;
+  }
+  .win-afterglow.live .afterglow-tag {
+    animation:
+      agLineReveal 2.4s cubic-bezier(0.22, 1, 0.36, 1) 2.8s forwards,
+      agTagGlow 3.2s ease-in-out 5.4s infinite;
+  }
+  .win-afterglow.live .afterglow-tag::before {
+    animation: agTagHalo 3.2s ease-in-out 5.4s infinite;
+  }
+  @keyframes agTagGlow {
+    0%, 100% {
+      color: #ffd0e8;
+      border-color: rgba(255, 160, 210, 0.55);
+      text-shadow:
+        0 0 10px rgba(255, 200, 230, 0.9),
+        0 0 22px rgba(255, 120, 180, 0.55);
+      box-shadow:
+        0 0 20px rgba(255, 90, 150, 0.35),
+        0 0 40px rgba(255, 60, 120, 0.22),
+        inset 0 0 14px rgba(255, 140, 200, 0.1);
+    }
+    50% {
+      color: #fff0f8;
+      border-color: rgba(255, 200, 230, 0.9);
+      text-shadow:
+        0 0 14px rgba(255, 240, 250, 1),
+        0 0 28px rgba(255, 140, 200, 0.85),
+        0 0 48px rgba(255, 90, 150, 0.45);
+      box-shadow:
+        0 0 28px rgba(255, 110, 170, 0.55),
+        0 0 52px rgba(255, 70, 130, 0.38),
+        inset 0 0 22px rgba(255, 160, 210, 0.2);
+    }
+  }
+  @keyframes agTagHalo {
+    0%, 100% { opacity: 0.55; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.06); }
+  }
+
+  .afterglow-sub {
+    margin: 0;
+    width: auto;
+    max-width: 98vw;
+    padding: 0 clamp(4px, 1.5vw, 10px);
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(13px, 3.1vw, 24px);
+    font-weight: 600; font-style: italic;
+    line-height: 1.2;
+    color: rgba(255, 235, 245, 0.95);
+    text-align: center;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(6px);
+    flex-shrink: 0;
+  }
+  .win-afterglow.live .ag-sub { animation-delay: 3.6s; }
+
+  .infinity-neon-wrap {
+    position: relative; z-index: 3;
+    width: min(86vw, 340px);
+    flex-shrink: 0;
+    margin: clamp(18px, 4vh, 36px) 0;
+    opacity: 0;
+    transform: scale(0.88);
+    filter: blur(10px);
+  }
+  .win-afterglow.live .infinity-neon-wrap {
+    animation: infinityReveal 2.8s cubic-bezier(0.22, 1, 0.36, 1) 4.4s forwards;
+  }
+  @keyframes infinityReveal {
+    0% { opacity: 0; transform: scale(0.88); filter: blur(10px); }
+    100% { opacity: 1; transform: scale(1); filter: blur(0); }
+  }
+
+  .infinity-neon-svg {
+    display: block; width: 100%; height: auto; overflow: visible;
+  }
+  .infinity-neon-path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .infinity-glow-outer {
+    stroke: url(#infinityGlowOuter);
+    stroke-width: 20;
+    opacity: 0.5;
+    filter: blur(7px);
+  }
+  .infinity-glow-mid {
+    stroke: url(#infinityGlowMid);
+    stroke-width: 11;
+    opacity: 0.75;
+    filter: blur(2px);
+  }
+  .infinity-neon-core {
+    stroke: url(#infinityGlowCore);
+    stroke-width: 6;
+    filter: drop-shadow(0 0 10px rgba(255, 240, 248, 0.95))
+            drop-shadow(0 0 22px rgba(255, 150, 200, 0.9))
+            drop-shadow(0 0 36px rgba(255, 100, 160, 0.55));
+  }
+  .win-afterglow.live .infinity-neon-core {
+    animation: infinityNeonPulse 3.6s ease-in-out 7s infinite;
+  }
+  @keyframes infinityNeonPulse {
+    0%, 100% { stroke-opacity: 0.9; }
+    50% { stroke-opacity: 1; filter: drop-shadow(0 0 14px rgba(255,255,255,.9)) drop-shadow(0 0 30px rgba(255,150,200,.95)); }
+  }
+
+  .infinity-roam-heart {
+    fill: #ff5e94;
+    stroke: #ffc4dc;
+    stroke-width: 0.6;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9))
+            drop-shadow(0 0 10px rgba(255, 120, 180, 0.85));
+  }
+  .infinity-roam-heart-shine {
+    fill: rgba(255, 255, 255, 0.55);
+    pointer-events: none;
+  }
+
+  .win-afterglow.live .ag-d3 { animation-delay: 6.8s; }
+  .win-afterglow.live .ag-d4 { animation-delay: 8.8s; }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 25px; }
+    .char-wrap { width: 200px; height: 220px; } .alien-host { width: 142px; }
+    .halo { width: 168px; height: 168px; } .sparkle-ring { width: 190px; height: 190px; }
+    #yesBtn, #noBtn { padding: 14px 30px; font-size: 18px; }
+    .scene-stage { width: min(300px, 84vw); height: min(230px, 30vh); transform: translate(-50%, -52%); }
+    .scene-caption { top: 14%; font-size: 15px; }
+    .infinity-neon-wrap { width: min(90vw, 290px); }
+    .afterglow-prelude { font-size: clamp(13px, 3.1vw, 17px); }
+    .afterglow-prelude2, .afterglow-sub { font-size: clamp(12px, 2.95vw, 16px); }
+    .afterglow-vow { font-size: 17px; }
+    .afterglow-sign { font-size: 21px; }
+    .afterglow-tag { font-size: clamp(10px, 2.05vw, 13px); }
+    .infinity-stage { gap: 12px; padding: 20px 10px 96px; }
+    .infinity-neon-wrap { margin: 16px 0; }
+    .ag-line, .afterglow-sub { max-width: 94vw; }
+  }
+  @media (max-height: 720px) {
+    .infinity-stage { gap: 10px; padding-top: 16px; padding-bottom: 88px; }
+    .infinity-neon-wrap { width: min(78vw, 270px); }
+    .afterglow-prelude, .afterglow-vow { font-size: clamp(15px, 3.4vw, 22px); }
+    .afterglow-prelude2, .afterglow-sub { font-size: clamp(14px, 3.1vw, 20px); }
+    .afterglow-sign { font-size: clamp(20px, 4.4vw, 27px); }
+    .win-chips { gap: 6px; }
+    .win-chips span { padding: 5px 12px; font-size: 11px; }
+    .trademark { font-size: 13px; }
+  }
+
+  @media (max-width: 768px) {
+    .card { width: min(94vw, 420px); padding: 28px 22px 24px; }
+    .login-card { width: min(94vw, 420px); padding: 28px 22px 22px; }
+    .char-wrap { width: min(220px, 58vw); height: min(240px, 62vw); }
+    .alien-host { width: min(150px, 40vw); }
+  }
+
+  @supports (padding: max(0px)) {
+    .login-gate { padding-bottom: max(70px, env(safe-area-inset-bottom)); }
+    .infinity-stage {
+      padding-bottom: max(100px, calc(16vh + env(safe-area-inset-bottom)));
+    }
+    .win-overlay { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .star { animation: none !important; opacity: 0.65; }
+    body { animation: none !important; }
+  }
+</style>
+</head>
+<body class="locked booting">
+
+  <div id="appLoader" class="app-loader" role="status" aria-live="polite" aria-busy="true">
+    <div class="loader-glow" aria-hidden="true"></div>
+    <div class="loader-heart" aria-hidden="true">♥</div>
+    <p class="loader-text">Getting everything ready for you…</p>
+    <div class="loader-bar" aria-hidden="true"><span class="loader-bar-fill"></span></div>
+  </div>
+
+  <!-- PIN login gate -->
+  <div class="login-gate" id="loginGate">
+    <div class="login-stars" id="loginStars"></div>
+    <div class="login-shooting" id="loginShooting"></div>
+
+    <div class="login-card" id="loginCard">
+      <div class="login-head-stage" id="loginHeadStage">
+        <div class="login-badge-slot">
+          <span class="login-badge login-head-text" id="loginBadge">✦ secret crush zone ✦</span>
+        </div>
+        <div class="login-title-slot">
+          <h1 class="login-head-text" id="loginTitle">Hey you… password pls 💕</h1>
+        </div>
+        <div class="login-sub-slot">
+          <p class="login-sub login-head-text" id="loginSub">Only the right code gets you in.<br/>Take your time — no peeking 😘</p>
+        </div>
+      </div>
+      
+      <div class="pin-display" id="pinDisplay">
+        <div class="pin-group" id="pinGroupA"></div>
+        <span class="pin-dash" aria-hidden="true">–</span>
+        <div class="pin-group" id="pinGroupB"></div>
+      </div>
+      <p class="login-hint" id="loginHint">Psst… someone special locked this with love 🔐💗</p>
+     
+      <div class="pin-pad" id="pinPad">
+        <button type="button" class="pin-key" data-key="1">1</button>
+        <button type="button" class="pin-key" data-key="2">2</button>
+        <button type="button" class="pin-key" data-key="3">3</button>
+        <button type="button" class="pin-key" data-key="4">4</button>
+        <button type="button" class="pin-key" data-key="5">5</button>
+        <button type="button" class="pin-key" data-key="6">6</button>
+        <button type="button" class="pin-key" data-key="7">7</button>
+        <button type="button" class="pin-key" data-key="8">8</button>
+        <button type="button" class="pin-key" data-key="9">9</button>
+        <button type="button" class="pin-key wide" data-key="back">⌫</button>
+        <button type="button" class="pin-key" data-key="0">0</button>
+        <button type="button" class="pin-key wide" data-key="clear">✕</button>
+        <button type="button" class="pin-key enter" data-key="enter">Unlock my heart 💖</button>
+      </div>
+    </div>
+
+    <div class="trademark">made with lots of <span class="hb">💖</span> by <b>mohit</b> 👽</div>
+  </div>
+
+  <div id="appRoot" inert aria-hidden="true">
+  <div class="orb a"></div>
+  <div class="orb b"></div>
+  <div class="orb c"></div>
+  <div id="stars"></div>
+  <div class="main-shooting" id="mainShooting"></div>
+
+  <div class="deco moon">🌙</div>
+  <div class="deco planet">🪐</div>
+  <div class="deco star1">✨</div>
+  <div class="deco star2">💫</div>
+  <div class="deco rocket">🚀</div>
+
+  <div class="card" id="card">
+    <div class="char-wrap" id="charWrap">
+      <div class="halo"></div>
+      <div class="sparkle-ring"><span>🌟</span><span>⭐</span><span>✨</span><span>💫</span></div>
+      <div class="alien-host" id="cardAlien"></div>
+    </div>
+
+    <h1 id="question">Be honest… you wanna date me, right?</h1>
+    <p class="subtitle" id="subtitle">Don't leave a cute alien on read 👽💫</p>
+
+    <div class="buttons" id="buttons">
+      <button id="yesBtn">Obvs yes 💖</button>
+      <button id="noBtn">Nah</button>
+    </div>
+
+    <p class="hint" id="hint"></p>
+  </div>
+
+  <div class="trademark">made with lots of <span class="hb">💖</span> by <b>mohit</b> 👽</div>
+
+  <!-- Victory / full-screen cinematic -->
+  <div class="win" id="winScreen">
+    <div class="win-bg">
+      <div class="win-nebula"></div>
+      <div class="win-aurora"></div>
+      <div class="win-glow"></div>
+      <div class="win-orb rose"></div>
+      <div class="win-orb lilac"></div>
+      <div class="win-orb blush"></div>
+      <div class="win-dust"></div>
+    </div>
+    <div class="win-sky" id="winSky">
+      <div class="win-stars" id="winStars"></div>
+    </div>
+    <div class="scene" id="scene">
+      <div class="scene-cine-bar top"></div>
+      <div class="scene-cine-bar bot"></div>
+      <div class="scene-vignette"></div>
+      <div class="scene-deco m1">💕</div>
+      <div class="scene-deco m2">🥰</div>
+      <div class="scene-deco m3">✨</div>
+      <div class="scene-deco m4">💋</div>
+      <div class="scene-deco m5">💖</div>
+      <div class="scene-deco m6">😘</div>
+      <div class="scene-caption" id="sceneCaption"></div>
+      <div class="scene-stage" id="sceneStage">
+        <div class="mover s-ufo" id="sUfo">
+          <div class="ufo-wrap" id="ufoWrap">
+            <svg class="ufo-svg" viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <linearGradient id="beamGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#d4fff0" stop-opacity="0.85"/>
+                  <stop offset="55%" stop-color="#a8f5dc" stop-opacity="0.45"/>
+                  <stop offset="100%" stop-color="#a8f5dc" stop-opacity="0"/>
+                </linearGradient>
+                <radialGradient id="domeGrad" cx="40%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#e3f9ff"/>
+                  <stop offset="100%" stop-color="#5ec8e8"/>
+                </radialGradient>
+                <linearGradient id="discGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#4a5568"/>
+                  <stop offset="100%" stop-color="#1a202c"/>
+                </linearGradient>
+                <radialGradient id="portalGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#86ff7a"/>
+                  <stop offset="100%" stop-color="#22c55e"/>
+                </radialGradient>
+                <filter id="ufoGlow" x="-40%" y="-40%" width="180%" height="180%">
+                  <feGaussianBlur stdDeviation="4" result="b"/>
+                  <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <g class="ufo-beam">
+                <polygon points="168,148 232,148 310,318 90,318" fill="url(#beamGrad)"/>
+              </g>
+              <ellipse cx="200" cy="152" rx="118" ry="22" fill="url(#discGrad)" filter="url(#ufoGlow)"/>
+              <g fill="#67e8f9">
+                <circle class="rim-lite" cx="95" cy="152" r="5"/><circle class="rim-lite" cx="135" cy="158" r="4.5"/>
+                <circle class="rim-lite" cx="200" cy="162" r="5"/><circle class="rim-lite" cx="265" cy="158" r="4.5"/>
+                <circle class="rim-lite" cx="305" cy="152" r="5"/>
+              </g>
+              <ellipse class="portal-glow" cx="200" cy="148" rx="28" ry="10" fill="url(#portalGrad)" filter="url(#ufoGlow)"/>
+              <ellipse cx="200" cy="108" rx="52" ry="44" fill="url(#domeGrad)" stroke="#b8ecff" stroke-width="1.5"/>
+              <ellipse cx="178" cy="88" rx="18" ry="10" fill="#fff" opacity="0.35"/>
+            </svg>
+          </div>
+        </div>
+        <div class="mover s-boy"  id="sceneBoy"></div>
+        <div class="mover s-girl" id="sceneGirl"></div>
+      </div>
+    </div>
+    <div class="win-shooting" id="winShooting"></div>
+    <div class="win-afterglow" id="winAfterglow" aria-hidden="true">
+      <div class="afterglow-hearts-field" id="afterglowHeartsField" aria-hidden="true"></div>
+      <div class="infinity-stage" aria-live="polite">
+        <p class="afterglow-prelude ag-line ag-d1">The UFO left, but I'm still right here with you.</p>
+        <p class="afterglow-prelude2 ag-line ag-d2">This was never just a game — I made every bit of this for you.</p>
+        <span class="afterglow-tag ag-line ag-tag">SPECIALLY FOR YOU</span>
+        <p class="afterglow-sub ag-line ag-sub">You truly matters to me — more than stars, more than anything else.</p>
+        <div class="infinity-neon-wrap" aria-label="Forever">
+          <svg class="infinity-neon-svg" viewBox="0 0 320 136" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="infinityGlowOuter" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="0%" stop-color="#ffb3d9" stop-opacity="0.25"/>
+                <stop offset="50%" stop-color="#ff8fab" stop-opacity="0.5"/>
+                <stop offset="100%" stop-color="#ffb3d9" stop-opacity="0.25"/>
+              </linearGradient>
+              <linearGradient id="infinityGlowMid" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffe0ef"/>
+                <stop offset="50%" stop-color="#ff8fab"/>
+                <stop offset="100%" stop-color="#ffc4dc"/>
+              </linearGradient>
+              <linearGradient id="infinityGlowCore" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="0%" stop-color="#fff8fc"/>
+                <stop offset="50%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#ffe8f4"/>
+              </linearGradient>
+              <!-- classic ∞ — plump equal lobes, clean center cross -->
+              <path id="infinityTrack" d="M 44 68 C 44 30, 104 24, 160 68 C 216 112, 276 106, 276 68 C 276 30, 216 24, 160 68 C 104 112, 44 106, 44 68"/>
+            </defs>
+            <path class="infinity-neon-path infinity-glow-outer" d="M 44 68 C 44 30, 104 24, 160 68 C 216 112, 276 106, 276 68 C 276 30, 216 24, 160 68 C 104 112, 44 106, 44 68"/>
+            <path class="infinity-neon-path infinity-glow-mid" d="M 44 68 C 44 30, 104 24, 160 68 C 216 112, 276 106, 276 68 C 276 30, 216 24, 160 68 C 104 112, 44 106, 44 68"/>
+            <path class="infinity-neon-path infinity-neon-core" d="M 44 68 C 44 30, 104 24, 160 68 C 216 112, 276 106, 276 68 C 276 30, 216 24, 160 68 C 104 112, 44 106, 44 68"/>
+            <g class="infinity-roamer">
+              <!-- tip at (0,0), rotated to +x — rides the stroke with rotate="auto" -->
+              <g transform="rotate(90) scale(1.35)">
+                <g class="infinity-heart-pulse">
+                  <ellipse class="infinity-roam-heart-shine" cx="-2" cy="3" rx="3.2" ry="2.4"/>
+                  <path class="infinity-roam-heart" d="M 0 0 C -4.8 -2.2 -8.5 1.5 -8 7.2 C -3.8 11.2 0 13.8 0 13.8 C 0 13.8 3.8 11.2 8 7.2 C 8.5 1.5 4.8 -2.2 0 0 Z"/>
+                  <animateTransform attributeName="transform" type="scale" values="1;1.07;1" dur="0.85s" repeatCount="indefinite"/>
+                </g>
+              </g>
+              <animateMotion dur="5.5s" repeatCount="indefinite" rotate="auto" begin="4.6s">
+                <mpath href="#infinityTrack"/>
+              </animateMotion>
+            </g>
+          </svg>
+        </div>
+        <p class="afterglow-vow ag-line ag-d3">I promise, I will love you till my last breath</p>
+        <p class="afterglow-sign ag-line ag-d4">Forever yours, mohit ♥</p>
+      </div>
+    </div>
+    <div class="win-overlay">
+      <div class="win-overlay-stack">
+        <div class="win-badge">✦ Caught you — you said yes ✦</div>
+        <h2 id="winTitle">I knew it, you'd fold eventually… cutie 😏💕</h2>
+        <button class="replay" id="replayBtn">Make me ask again 😈</button>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- #appRoot -->
+
+<script>
+  /* ---------------- cute green alien (matches the cartoon) ---------------- */
+  function makeAlien(withFlowers = false, idSuffix = null) {
+    const gid = idSuffix || (withFlowers ? "sf" : "ca");
+    const bouquet = withFlowers
+      ? `<g class="bouquet">
+           <path d="M134 164 Q148 170 160 164 L157 178 Q148 184 137 178 Z" fill="#ffd6e8" stroke="#ff8fab" stroke-width="1.2"/>
+           <path d="M142 164 L142 134" stroke="#3d8b2f" stroke-width="2.5" stroke-linecap="round"/>
+           <path d="M148 164 L149 130" stroke="#3d8b2f" stroke-width="2" stroke-linecap="round"/>
+           <path d="M154 164 L157 136" stroke="#3d8b2f" stroke-width="2" stroke-linecap="round"/>
+           <ellipse cx="139" cy="138" rx="3" ry="6" fill="#6bc039" transform="rotate(-25 139 138)"/>
+           <ellipse cx="158" cy="140" rx="3" ry="5" fill="#58a828" transform="rotate(22 158 140)"/>
+           <circle cx="142" cy="126" r="7" fill="#ff5e94"/><circle cx="142" cy="126" r="3" fill="#ffb3d0"/>
+           <circle cx="149" cy="120" r="8" fill="#ff6b9d"/><circle cx="149" cy="120" r="3.5" fill="#ffc4dc"/>
+           <circle cx="157" cy="126" r="7" fill="#e84a7f"/><circle cx="157" cy="126" r="3" fill="#ff8fab"/>
+           <circle cx="145" cy="114" r="5.5" fill="#ff7eb0"/><circle cx="153" cy="112" r="6" fill="#ff5e94"/>
+           <circle cx="138" cy="120" r="2" fill="#fff" opacity=".85"/><circle cx="162" cy="118" r="1.8" fill="#fff" opacity=".75"/>
+         </g>`
+      : "";
+    const rightArm = withFlowers
+      ? `<path d="M114 198 C 128 192, 140 178, 146 168" stroke="#74c531" stroke-width="9" stroke-linecap="round" fill="none"/>
+         <circle cx="146" cy="168" r="6" fill="#74c531"/>`
+      : `<path d="M114 198 C 136 202, 145 216, 143 230"/>
+         <circle cx="143" cy="232" r="7" fill="#74c531"/>`;
+    return `
+    <svg class="alien-svg boy" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="ahead-${gid}" cx="42%" cy="34%" r="72%">
+          <stop offset="0%" stop-color="#cdff84"/><stop offset="58%" stop-color="#8ed83f"/><stop offset="100%" stop-color="#56a21c"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="100" cy="290" rx="46" ry="8" fill="rgba(40,80,20,.20)"/>
+      <g stroke="#56a21c" stroke-width="10" stroke-linecap="round">
+        <line x1="90" y1="252" x2="85" y2="284"/><line x1="110" y1="252" x2="115" y2="284"/>
+      </g>
+      <ellipse cx="82" cy="287" rx="12" ry="6" fill="#4a8a16"/><ellipse cx="118" cy="287" rx="12" ry="6" fill="#4a8a16"/>
+      <path d="M100 170 C 80 174, 76 214, 84 250 C 90 270, 110 270, 116 250 C 124 214, 120 174, 100 170 Z" fill="url(#ahead-${gid})"/>
+      <g class="arms" stroke="#74c531" stroke-width="9" stroke-linecap="round" fill="none">
+        <path d="M86 198 C 64 202, 55 216, 57 230"/>
+        ${rightArm}
+      </g>
+      <circle cx="57" cy="232" r="7" fill="#74c531"/>
+      <g class="antennae">
+        <g stroke="#74c531" stroke-width="6" stroke-linecap="round" fill="none">
+          <path d="M84 80 C 72 48, 60 38, 56 24"/><path d="M116 80 C 128 48, 140 38, 144 24"/>
+        </g>
+        <circle cx="55" cy="20" r="9" fill="#2c2c2c"/><circle cx="145" cy="20" r="9" fill="#2c2c2c"/>
+        <circle cx="52" cy="17" r="2.6" fill="#fff" opacity=".7"/><circle cx="142" cy="17" r="2.6" fill="#fff" opacity=".7"/>
+      </g>
+      <ellipse cx="100" cy="120" rx="70" ry="62" fill="url(#ahead-${gid})"/>
+      <g fill="#56a21c" opacity=".45">
+        <circle cx="58" cy="82" r="4"/><circle cx="140" cy="92" r="3"/><circle cx="122" cy="62" r="3"/><circle cx="152" cy="128" r="4"/><circle cx="70" cy="150" r="3"/>
+      </g>
+      <g class="eyes">
+        <ellipse cx="74" cy="122" rx="25" ry="31" fill="#10333d"/><ellipse cx="126" cy="122" rx="25" ry="31" fill="#10333d"/>
+        <circle cx="65" cy="109" r="9" fill="#fff"/><circle cx="117" cy="109" r="9" fill="#fff"/>
+        <circle cx="83" cy="134" r="4.5" fill="#fff" opacity=".85"/><circle cx="135" cy="134" r="4.5" fill="#fff" opacity=".85"/>
+      </g>
+      <g class="lids"><ellipse class="lid" cx="74" cy="90" rx="26" ry="33" fill="#8ed83f"/><ellipse class="lid" cx="126" cy="90" rx="26" ry="33" fill="#8ed83f"/></g>
+      <path class="mouth" d="M86 158 Q 100 162 114 158" stroke="#2a4d12" stroke-width="4" fill="none" stroke-linecap="round"/>
+      ${bouquet}
+    </svg>`;
+  }
+
+  /* ---------------- female alien (yes screen date partner) ---------------- */
+  function makeFemaleAlien(idSuffix = "fg") {
+    const fid = idSuffix;
+    return `
+    <svg class="alien-girl-svg girl" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="fhead-${fid}" cx="42%" cy="34%" r="72%">
+          <stop offset="0%" stop-color="#ffd6f5"/><stop offset="55%" stop-color="#e879f9"/><stop offset="100%" stop-color="#9333ea"/>
+        </radialGradient>
+        <linearGradient id="fskirt-${fid}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f0abfc"/><stop offset="100%" stop-color="#7e22ce"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="100" cy="290" rx="44" ry="7" fill="rgba(80,20,100,.18)"/>
+      <!-- legs -->
+      <g stroke="#c084fc" stroke-width="9" stroke-linecap="round" fill="none">
+        <line x1="88" y1="252" x2="84" y2="284"/><line x1="112" y1="252" x2="116" y2="284"/>
+      </g>
+      <ellipse cx="81" cy="287" rx="11" ry="5" fill="#7e22ce"/><ellipse cx="119" cy="287" rx="11" ry="5" fill="#7e22ce"/>
+      <!-- flared alien dress -->
+      <path d="M100 172 C 82 174, 72 200, 66 248 C 62 272, 60 288, 60 288 C 72 296 128 296 140 288 C 140 288 138 272 134 248 C 128 200 118 174 100 172 Z" fill="url(#fskirt-${fid})"/>
+      <path d="M66 248 C 82 258 118 258 134 248" fill="none" stroke="#fff" stroke-width="1.2" opacity=".35"/>
+      <path d="M100 170 C 80 174, 76 214, 84 250 C 90 270, 110 270, 116 250 C 124 214, 120 174, 100 170 Z" fill="url(#fhead-${fid})"/>
+      <!-- arms: shy hand down — left arm NOT reaching toward boy/bouquet -->
+      <g class="arms" stroke="#d8b4fe" stroke-width="8" stroke-linecap="round" fill="none">
+        <path d="M86 198 C 66 204, 56 218, 57 232"/>
+        <circle cx="57" cy="232" r="6" fill="#d8b4fe"/>
+        <path d="M114 198 C 130 204, 138 214, 140 228"/>
+        <circle cx="140" cy="230" r="6" fill="#d8b4fe"/>
+      </g>
+      <!-- antennae with heart bow -->
+      <g class="antennae">
+        <g stroke="#d8b4fe" stroke-width="5" stroke-linecap="round" fill="none">
+          <path d="M84 80 C 74 52, 64 42, 60 28"/><path d="M116 80 C 126 52, 136 42, 140 28"/>
+        </g>
+        <circle cx="58" cy="24" r="8" fill="#581c87"/><circle cx="142" cy="24" r="8" fill="#581c87"/>
+        <circle cx="55" cy="21" r="2.4" fill="#fff" opacity=".75"/><circle cx="139" cy="21" r="2.4" fill="#fff" opacity=".75"/>
+        <path d="M52 18 Q58 8 64 18 Q58 24 52 18" fill="#ff6b9d" opacity=".9"/>
+      </g>
+      <ellipse cx="100" cy="120" rx="68" ry="60" fill="url(#fhead-${fid})"/>
+      <g fill="#a855f7" opacity=".35">
+        <circle cx="58" cy="84" r="3.5"/><circle cx="138" cy="90" r="3"/><circle cx="120" cy="64" r="2.5"/>
+      </g>
+      <!-- blush -->
+      <ellipse cx="62" cy="138" rx="12" ry="7" fill="#ff6b9d" opacity=".35"/>
+      <ellipse cx="138" cy="138" rx="12" ry="7" fill="#ff6b9d" opacity=".35"/>
+      <g class="eyes">
+        <ellipse cx="74" cy="122" rx="24" ry="29" fill="#2d0a45"/>
+        <ellipse cx="126" cy="122" rx="24" ry="29" fill="#2d0a45"/>
+        <circle cx="66" cy="110" r="8" fill="#fff"/><circle cx="118" cy="110" r="8" fill="#fff"/>
+        <circle cx="76" cy="126" r="5" fill="#ff6b9d"/><circle cx="128" cy="126" r="5" fill="#ff6b9d"/>
+        <circle cx="82" cy="134" r="4" fill="#fff" opacity=".85"/><circle cx="134" cy="134" r="4" fill="#fff" opacity=".85"/>
+        <!-- lashes -->
+        <path d="M58 108 L54 102 M64 104 L62 98 M86 104 L88 98" stroke="#4a1060" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M142 108 L146 102 M136 104 L138 98 M114 104 L112 98" stroke="#4a1060" stroke-width="1.5" stroke-linecap="round"/>
+      </g>
+      <g class="lids"><ellipse class="lid" cx="74" cy="92" rx="25" ry="30" fill="#e879f9"/><ellipse class="lid" cx="126" cy="92" rx="25" ry="30" fill="#e879f9"/></g>
+      <path class="mouth" d="M84 156 Q 100 178 116 156" stroke="#581c87" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <!-- little sparkle -->
+      <text x="158" y="100" font-size="16" opacity=".8">✨</text>
+    </svg>`;
+  }
+
+  const MOUTHS = {
+    neutral: "M86 158 Q 100 162 114 158",
+    frown: "M86 165 Q 100 151 114 165",
+    smile: "M84 156 Q 100 178 116 156",
+    grin: "M82 154 Q 100 182 118 154",
+    ooh: "M92 158 Q 100 168 108 158"
+  };
+  function setMouth(host, kind) { const m = host.querySelector(".mouth"); if (m) m.setAttribute("d", MOUTHS[kind] || MOUTHS.neutral); }
+
+  /* ---------------- PIN login gate ---------------- */
+  const CORRECT_PIN = "20032003";
+  const LOGIN_WRONG_HOLD = 5000;
+  const LOGIN_SUCCESS_HOLD = 4200;
+  let appUnlocked = false;
+  let loginShootIv = null;
+  let pinDigits = [];
+  let pinLocked = false;
+  let hintLocked = false;
+  let hintUnlockTimer = null;
+  let loginHeadTimer = null;
+  let loginHeadIdx = 0;
+  let loginHeadSwapping = false;
+
+  const loginBadges = [
+    "✦ secret crush zone ✦",
+    "✦ for your eyes only ✦",
+    "✦ love lock engaged ✦",
+    "✦ certified heart-throb area ✦",
+    "✦ no peeking allowed ✦",
+    "✦ made with extra blush ✦",
+    "✦ romance loading… ✦",
+    "✦ you're on the list ✦",
+    "✦ butterflies enabled ✦",
+    "✦ vip crush access ✦"
+  ];
+  const loginHeadlines = [
+    { title: "Hey you… password pls 💕", sub: "Only the right code gets you in.<br/>Take your time — no peeking 😘" },
+    { title: "Miss me already? 😏", sub: "Prove it — type the code, sweetheart.<br/>I'm not going anywhere 🥰" },
+    { title: "Knock knock… it's your crush 💗", sub: "Eight little digits stand between us.<br/>Don't keep me waiting too long 😘" },
+    { title: "I locked this… just for you 🔐", sub: "Wrong guesses still count as flirting, btw.<br/>Keep going, cutie 💋" },
+    { title: "You + the right code = trouble 💋", sub: "Something tells me you're the one.<br/>Show me I'm right 👀" },
+    { title: "Still thinking about me? Good 🥰", sub: "The door only opens for someone special.<br/>Spoiler: that's probably you ✨" },
+    { title: "Shhh… our little secret door ✨", sub: "No one else gets this link.<br/>Feels kinda romantic, no? 💕" },
+    { title: "Type slow… I'm enjoying this 😳", sub: "Every digit you press makes my heart skip.<br/>Not even kidding 💗" },
+    { title: "Not everyone gets a key to my heart 💖", sub: "But you? You're already halfway in my head.<br/>Finish the code, lover 😏" },
+    { title: "You look cute when you're guessing 👀", sub: "I'd watch you try all night, honestly.<br/>Almost don't want you to get it right 🥰" },
+    { title: "Password or flirting? …both 😏", sub: "We're basically on a date already.<br/>Unlock me and find out 💕" },
+    { title: "Be honest — you came back for me 💘", sub: "I saved something lovely behind this lock.<br/>Worth every try, promise ✨" },
+    { title: "Caught you smiling, didn't I? 😌", sub: "Good — that's exactly the vibe I wanted.<br/>Now unlock the rest 💗" },
+    { title: "This page has a crush on you 💕", sub: "Literally. It won't open for anyone else.<br/>Try your luck, handsome 😘" },
+    { title: "I'd wait forever… but don't test me 😏", sub: "The code is calling your name.<br/>Answer it, babe ✨" },
+    { title: "Your finger looks ready to type 👀", sub: "Go on… one digit at a time.<br/>I believe in you, cutie 💋" },
+    { title: "Warning: extra flirty past this point 💘", sub: "Proceed only if your heart can handle it.<br/>Password first, butterflies after 🥰" },
+    { title: "Did you rehearse this moment? 😳", sub: "Because you're doing suspiciously well.<br/>Keep going, mystery man 💕" },
+    { title: "My heart's doing the pin pad dance 💃", sub: "Every wrong try still makes me smile.<br/>Right one? Game over — in a good way 😏" },
+    { title: "Last chance to back out… kidding 😘", sub: "You're staying. Type the code.<br/>Something sweet is waiting inside ✨" }
+  ];
+  const LOGIN_HEAD_READ = 6800;
+  const LOGIN_HEAD_FADE = 780;
+
+  const loginTeaseIdle = [
+    "Psst… someone special locked this with love 🔐💗",
+    "Type it like xxxx–xxxx… you've got this, cutie 😏",
+    "Wrong code? No worries — try again for me 💕",
+    "This door only opens for one person… maybe you 👀",
+    "Take your time… I'm not going anywhere 🥰",
+    "The stars are cheering for you tonight ✨"
+  ];
+  const loginTeaseType = [
+    "Mmm yes… keep typing, sweetheart 💕",
+    "Halfway — my heart's racing already 🥰",
+    "Almost there… don't leave me hanging 😘",
+    "One more beat… you've almost got it 💗"
+  ];
+  const loginTeaseWrong = [
+    "Nope 😂 but honestly? cute attempt",
+    "Not quite, love… try again for me? 💕",
+    "Wrong code — but I still like you 🥰",
+    "Nice try cutie — the code is still hiding 😏",
+    "Almost feels like flirting at this point 💗",
+    "Shake it off and give it another go, babe ✨"
+  ];
+
+  function applyLoginHeadline(idx) {
+    const pair = loginHeadlines[idx];
+    document.getElementById("loginTitle").textContent = pair.title;
+    document.getElementById("loginSub").innerHTML = pair.sub;
+    document.getElementById("loginBadge").textContent = loginBadges[idx % loginBadges.length];
+  }
+
+  function loginHeadEls() {
+    return [
+      document.getElementById("loginBadge"),
+      document.getElementById("loginTitle"),
+      document.getElementById("loginSub")
+    ];
+  }
+
+  function playLoginHeadIn() {
+    const els = loginHeadEls();
+    els.forEach((el) => {
+      el.classList.add("swap-in");
+      el.classList.remove("swap-out");
+    });
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        els.forEach((el) => el.classList.remove("swap-in"));
+      });
+    });
+  }
+
+  function cycleLoginHeadline() {
+    if (!document.body.classList.contains("locked") || loginHeadSwapping) return;
+    loginHeadSwapping = true;
+    const els = loginHeadEls();
+    els.forEach((el) => {
+      el.classList.remove("swap-in");
+      el.classList.add("swap-out");
+    });
+    setTimeout(() => {
+      loginHeadIdx = (loginHeadIdx + 1) % loginHeadlines.length;
+      applyLoginHeadline(loginHeadIdx);
+      playLoginHeadIn();
+      loginHeadSwapping = false;
+      scheduleLoginHeadline();
+    }, LOGIN_HEAD_FADE);
+  }
+
+  function scheduleLoginHeadline() {
+    if (loginHeadTimer) clearTimeout(loginHeadTimer);
+    loginHeadTimer = setTimeout(cycleLoginHeadline, LOGIN_HEAD_READ);
+  }
+
+  function startLoginHeadlines() {
+    loginHeadIdx = Math.floor(Math.random() * loginHeadlines.length);
+    applyLoginHeadline(loginHeadIdx);
+    loginHeadEls().forEach((el) => el.classList.remove("swap-out", "swap-in"));
+    scheduleLoginHeadline();
+  }
+
+  function stopLoginHeadlines() {
+    if (loginHeadTimer) { clearTimeout(loginHeadTimer); loginHeadTimer = null; }
+    loginHeadSwapping = false;
+  }
+
+  function spawnLoginSpark(x, y) {
+    const s = document.createElement("div");
+    s.className = "login-spark";
+    s.textContent = ["💕","✨","💗","💫","🥰","💖"][Math.floor(Math.random() * 6)];
+    s.style.left = x + "px";
+    s.style.top = y + "px";
+    document.getElementById("loginGate").appendChild(s);
+    setTimeout(() => s.remove(), 1100);
+  }
+
+  function buildPinSlots() {
+    const groupA = document.getElementById("pinGroupA");
+    const groupB = document.getElementById("pinGroupB");
+    groupA.innerHTML = "";
+    groupB.innerHTML = "";
+    for (let i = 0; i < 8; i++) {
+      const slot = document.createElement("div");
+      slot.className = "pin-slot";
+      slot.dataset.idx = i;
+      slot.textContent = "·";
+      slot.style.opacity = "0.35";
+      (i < 4 ? groupA : groupB).appendChild(slot);
+    }
+  }
+
+  function setLoginHint(text, className, holdMs) {
+    const hint = document.getElementById("loginHint");
+    hint.textContent = text;
+    hint.className = "login-hint" + (className ? " " + className : "");
+    if (holdMs > 0) {
+      hintLocked = true;
+      if (hintUnlockTimer) clearTimeout(hintUnlockTimer);
+      hintUnlockTimer = setTimeout(() => {
+        hintLocked = false;
+        hintUnlockTimer = null;
+        refreshPinUI();
+      }, holdMs);
+    }
+  }
+
+  function refreshPinUI() {
+    const slots = document.querySelectorAll("#pinDisplay .pin-slot");
+    slots.forEach((slot, i) => {
+      const filled = i < pinDigits.length;
+      slot.classList.toggle("filled", filled);
+      slot.classList.toggle("active", i === pinDigits.length);
+      if (filled) {
+        slot.textContent = "●";
+        slot.style.opacity = "1";
+        slot.style.color = "#ffb3d9";
+      } else if (i === pinDigits.length) {
+        slot.textContent = "▸";
+        slot.style.opacity = "1";
+        slot.style.color = "var(--rose)";
+      } else {
+        slot.textContent = "·";
+        slot.style.opacity = "0.35";
+        slot.style.color = "#fff";
+      }
+    });
+    if (hintLocked) return;
+    const hint = document.getElementById("loginHint");
+    if (pinDigits.length === 0) {
+      hint.textContent = loginTeaseIdle[Math.floor(Math.random() * loginTeaseIdle.length)];
+      hint.className = "login-hint";
+    } else if (pinDigits.length < 8) {
+      const ti = Math.min(loginTeaseType.length - 1, Math.floor((pinDigits.length - 1) / 2));
+      hint.textContent = loginTeaseType[ti];
+      hint.className = "login-hint";
+    }
+    if (pinDigits.length === 4) {
+      hint.textContent = "Dash zone passed — second half, baby 💕";
+      hint.className = "login-hint";
+    }
+  }
+
+  const LOADER_MIN_MS = 1200;
+  const STAR_COUNTS = { login: 130, main: 150, win: 170 };
+
+  function getAdaptiveStarCount(base) {
+    const w = window.innerWidth;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return Math.max(24, Math.floor(base * 0.3));
+    if (w < 480) return Math.max(40, Math.floor(base * 0.5));
+    if (w < 768) return Math.max(60, Math.floor(base * 0.72));
+    return base;
+  }
+
+  function populateStarField(sky, count) {
+    if (!sky || sky.dataset.built === "1") return;
+    const n = getAdaptiveStarCount(count);
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < n; i++) {
+      const s = document.createElement("div");
+      const roll = Math.random();
+      let cls = "star";
+      if (roll > 0.94) cls += " bright";
+      else if (roll > 0.84) cls += " rose";
+      else if (roll > 0.7) cls += " pink";
+      else if (roll > 0.55) cls += " blue";
+      else if (roll > 0.38) cls += " soft";
+      s.className = cls;
+      const sz = 0.8 + Math.random() * (cls.includes("bright") ? 2.8 : 2.2);
+      s.style.width = s.style.height = sz + "px";
+      s.style.left = Math.random() * 100 + "%";
+      s.style.top = Math.random() * 100 + "%";
+      s.style.animationDuration = (1.8 + Math.random() * 3.5) + "s";
+      s.style.animationDelay = (Math.random() * 4) + "s";
+      frag.appendChild(s);
+    }
+    sky.appendChild(frag);
+    sky.dataset.built = "1";
+  }
+
+  function buildLoginStars() {
+    populateStarField(document.getElementById("loginStars"), STAR_COUNTS.login);
+  }
+
+  function spawnShootingStar(layer, at) {
+    if (!layer) return;
+    const s = document.createElement("div");
+    const kind = Math.random();
+    s.className = "shooting-star" + (kind > 0.38 ? " rose" : kind > 0.15 ? " blue" : "");
+    const angle = -(18 + Math.random() * 32);
+    const rad = angle * Math.PI / 180;
+    const dist = 280 + Math.random() * 420;
+    if (at && at.x != null && at.y != null) {
+      const rect = layer.getBoundingClientRect();
+      s.style.left = (at.x - rect.left) + "px";
+      s.style.top = (at.y - rect.top) + "px";
+    } else {
+      s.style.left = Math.random() * 95 + "%";
+      s.style.top = Math.random() * 55 + "%";
+    }
+    s.style.setProperty("--angle", angle + "deg");
+    s.style.setProperty("--dx", Math.cos(rad) * dist + "px");
+    s.style.setProperty("--dy", Math.sin(rad) * dist + "px");
+    s.style.setProperty("--len", (100 + Math.random() * 160) + "px");
+    s.style.setProperty("--dur", (0.6 + Math.random() * 0.7) + "s");
+    layer.appendChild(s);
+    setTimeout(() => s.remove(), 1600);
+  }
+
+  function spawnShootingBurst(layer, clientX, clientY) {
+    const count = 1 + (Math.random() > 0.55 ? 1 : 0);
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        spawnShootingStar(layer, {
+          x: clientX + (Math.random() - 0.5) * 32,
+          y: clientY + (Math.random() - 0.5) * 32
+        });
+      }, i * 90);
+    }
+  }
+
+  function getActiveShootingLayer() {
+    if (document.body.classList.contains("locked")) {
+      return document.getElementById("loginShooting");
+    }
+    const win = document.getElementById("winScreen");
+    if (win && win.classList.contains("show")) {
+      return document.getElementById("winShooting");
+    }
+    const appRoot = document.getElementById("appRoot");
+    if (appRoot && !appRoot.hasAttribute("inert")) {
+      return document.getElementById("mainShooting");
+    }
+    return null;
+  }
+
+  function isShootingStarBackgroundClick(target) {
+    if (!(target instanceof Element)) return false;
+    return !target.closest(
+      ".login-card, .card, button, .trademark, .pin-pad, .char-wrap, .replay"
+    );
+  }
+
+  function startShootingLoop(layer, isActive) {
+    if (!layer) return null;
+    const spawn = () => {
+      if (typeof isActive === "function" && !isActive()) return;
+      if (layer.children.length > 2) return;
+      spawnShootingStar(layer);
+    };
+    spawn();
+    return setInterval(() => {
+      if (typeof isActive === "function" && !isActive()) return;
+      if (document.hidden) return;
+      if (Math.random() < 0.55) spawn();
+    }, 3400 + Math.random() * 2600);
+  }
+
+  function stopShootingLoop(ivRef, layer) {
+    if (ivRef) clearInterval(ivRef);
+    if (layer) layer.innerHTML = "";
+    return null;
+  }
+
+  function pushPinDigit(d) {
+    if (!document.body.classList.contains("locked") || pinDigits.length >= 8 || pinLocked) return;
+    if (hintLocked) {
+      hintLocked = false;
+      if (hintUnlockTimer) { clearTimeout(hintUnlockTimer); hintUnlockTimer = null; }
+    }
+    pinDigits.push(d);
+    refreshPinUI();
+    if (pinDigits.length === 8) setTimeout(tryUnlock, 280);
+  }
+
+  function clearPin() {
+    if (pinLocked) return;
+    pinDigits = [];
+    refreshPinUI();
+  }
+
+  function backPin() {
+    if (pinLocked) return;
+    if (hintLocked) {
+      hintLocked = false;
+      if (hintUnlockTimer) { clearTimeout(hintUnlockTimer); hintUnlockTimer = null; }
+    }
+    pinDigits.pop();
+    refreshPinUI();
+  }
+
+  function tryUnlock() {
+    const code = pinDigits.join("");
+    const card = document.getElementById("loginCard");
+    if (code === CORRECT_PIN) {
+      pinLocked = true;
+      setLoginHint("YES!! Welcome in, my favorite human 💕✨", "yay", LOGIN_SUCCESS_HOLD);
+      card.classList.add("success-pop");
+      for (let i = 0; i < 12; i++) {
+        setTimeout(() => {
+          spawnLoginSpark(
+            window.innerWidth * (0.2 + Math.random() * 0.6),
+            window.innerHeight * (0.25 + Math.random() * 0.45)
+          );
+        }, i * 80);
+      }
+      setTimeout(unlockApp, LOGIN_SUCCESS_HOLD);
+      return;
+    }
+    card.classList.remove("shake");
+    void card.offsetWidth;
+    card.classList.add("shake");
+    setLoginHint(loginTeaseWrong[Math.floor(Math.random() * loginTeaseWrong.length)], "oops", LOGIN_WRONG_HOLD);
+    setTimeout(clearPin, 1400);
+  }
+
+  function unlockApp() {
+    if (appUnlocked) return;
+    appUnlocked = true;
+    document.body.classList.remove("locked");
+    loginShootIv = stopShootingLoop(loginShootIv, document.getElementById("loginShooting"));
+    stopLoginHeadlines();
+    if (hintUnlockTimer) { clearTimeout(hintUnlockTimer); hintUnlockTimer = null; }
+    const gate = document.getElementById("loginGate");
+    gate.classList.add("unlock-out");
+    initMainApp();
+    setTimeout(() => { gate.style.display = "none"; gate.setAttribute("aria-hidden", "true"); }, 750);
+  }
+
+  let mainAssetsReady = false;
+
+  function prepareMainAppAssets() {
+    if (mainAssetsReady) return;
+    const cardAlien = document.getElementById("cardAlien");
+    const sceneBoy = document.getElementById("sceneBoy");
+    const sceneGirl = document.getElementById("sceneGirl");
+    if (cardAlien && !cardAlien.innerHTML.trim()) cardAlien.innerHTML = makeAlien();
+    if (sceneBoy && !sceneBoy.innerHTML.trim()) sceneBoy.innerHTML = makeAlien(true);
+    if (sceneGirl && !sceneGirl.innerHTML.trim()) sceneGirl.innerHTML = makeFemaleAlien();
+    populateStarField(document.getElementById("stars"), STAR_COUNTS.main);
+    mainAssetsReady = true;
+  }
+
+  function setLoaderProgress(pct) {
+    const bar = document.querySelector(".loader-bar-fill");
+    if (bar) bar.style.width = Math.min(100, pct) + "%";
+  }
+
+  function finishBoot() {
+    document.body.classList.remove("booting");
+    document.body.classList.add("ready");
+    const loader = document.getElementById("appLoader");
+    if (loader) loader.setAttribute("aria-busy", "false");
+    startLoginHeadlines();
+    loginShootIv = startShootingLoop(
+      document.getElementById("loginShooting"),
+      () => document.body.classList.contains("locked")
+    );
+    setTimeout(() => document.body.classList.add("booting-off"), 520);
+  }
+
+  async function bootApp() {
+    const started = Date.now();
+    setLoaderProgress(12);
+    try {
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    } catch (_) {}
+    setLoaderProgress(35);
+    buildPinSlots();
+    refreshPinUI();
+    buildLoginStars();
+    setLoaderProgress(58);
+    prepareMainAppAssets();
+    setLoaderProgress(78);
+    const wait = LOADER_MIN_MS - (Date.now() - started);
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+    setLoaderProgress(100);
+    requestAnimationFrame(finishBoot);
+  }
+
+  function initLoginGate() {
+    document.getElementById("pinPad").addEventListener("click", (e) => {
+      const key = e.target.closest(".pin-key");
+      if (!key) return;
+      e.preventDefault();
+      const k = key.dataset.key;
+      if (k === "enter") tryUnlock();
+      else if (k === "back") backPin();
+      else if (k === "clear") clearPin();
+      else if (k >= "0" && k <= "9") pushPinDigit(k);
+    });
+    window.addEventListener("keydown", (e) => {
+      if (!document.body.classList.contains("locked")) return;
+      if (e.key >= "0" && e.key <= "9") { e.preventDefault(); pushPinDigit(e.key); }
+      else if (e.key === "Enter") { e.preventDefault(); tryUnlock(); }
+      else if (e.key === "Backspace") { e.preventDefault(); backPin(); }
+      else if (e.key === "Escape") { e.preventDefault(); clearPin(); }
+    });
+    document.getElementById("appRoot").addEventListener("click", (e) => {
+      if (document.body.classList.contains("locked")) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+  }
+  initLoginGate();
+  bootApp();
+
+  let mainAppReady = false;
+
+  function initMainApp() {
+    if (mainAppReady) return;
+    mainAppReady = true;
+
+    const appRoot = document.getElementById("appRoot");
+    appRoot.removeAttribute("inert");
+    appRoot.removeAttribute("aria-hidden");
+
+  prepareMainAppAssets();
+  const cardAlien = document.getElementById("cardAlien");
+
+  let mainShootIv = null, winShootIv = null;
+  let noCount = 0, isSad = false, won = false;
+
+  mainShootIv = startShootingLoop(
+    document.getElementById("mainShooting"),
+    () => appUnlocked && !won
+  );
+
+  /* ---------------- state ---------------- */
+  const cardSvg  = cardAlien.querySelector(".alien-svg");
+  const cardEyes = cardSvg.querySelector(".eyes");
+  const charWrap = document.getElementById("charWrap");
+  const question = document.getElementById("question");
+  const subtitle = document.getElementById("subtitle");
+  const hint     = document.getElementById("hint");
+  const yesBtn   = document.getElementById("yesBtn");
+  const noBtn    = document.getElementById("noBtn");
+
+  const RUN_AFTER = 5;
+
+  const questions = [
+    "Be honest… you wanna date me, right?",
+    "NO?! You picked the chaos button 😼",
+    "Still playing hard to get? Classic.",
+    "You're really out here bullying a green boy 👽",
+    "Four nos deep and you're STILL here 👀",
+    "My antennas are filing a complaint 😭",
+    "The No button has entered witness protection 🏃"
+  ];
+  const subtitles = [
+    "Don't leave a cute alien on read 👽💫",
+    "Wrong answer bestie — that button's a trap 😌",
+    "I literally wore my good spacesuit for this 🛸",
+    "Even Saturn's rings are side-eyeing you 🪐",
+    "At this point you're just here for the drama",
+    "One more No and that button goes full parkour",
+    "Go on, chase it… I'll be here, emotionally wrecked 💅"
+  ];
+  const rejectionHints = [
+    "Strike 1 — the alien is taking notes 📝",
+    "Strike 2 — he's pretending he's fine (he's not)",
+    "Strike 3 — confidence: damaged. Ego: bruised.",
+    "Strike 4 — this is a character arc now 📉",
+    "Strike 5 — NO BUTTON HAS LEFT THE CHAT 🏃💨"
+  ];
+  const pokeLines = [
+    "Hey! Personal space, earthling! 👽",
+    "That tickles — do it again 😤",
+    "Poking me won't change your answer… maybe",
+    "Bold of you to touch an alien like that 😏",
+    "My antennas say you're flirting",
+    "Stop — okay don't stop — STOP 😳",
+    "You're lucky I'm cute",
+    "Boop detected. Feelings: activated 💫"
+  ];
+  let pokeMsgTimer = null, savedSubtitle = "", lastPokeAt = 0;
+
+  function lookAtPoint(x, y) {
+    const r = cardSvg.getBoundingClientRect();
+    const cx = r.left + r.width / 2, cy = r.top + r.height * 0.42;
+    const dx = Math.max(-8, Math.min(8, (x - cx) / (r.width / 2) * 8));
+    const dy = Math.max(-6, Math.min(7, (y - cy) / (r.height / 2) * 7));
+    cardEyes.style.transform = `translate(${dx}px, ${dy}px)`;
+    const tilt = Math.max(-8, Math.min(8, (x - cx) / (r.width / 2) * 8));
+    if (!cardSvg.classList.contains("happy") && !cardSvg.classList.contains("scared") && !cardAlien.classList.contains("poke")) {
+      cardSvg.style.transform = `rotate(${tilt * 0.35}deg)`;
+    }
+  }
+
+  function popReaction(emoji, topPct) {
+    const h = document.createElement("span");
+    h.className = "pop-reaction";
+    h.textContent = emoji;
+    h.style.left = (38 + Math.random() * 20) + "%";
+    h.style.top = (topPct ?? 6 + Math.random() * 10) + "%";
+    charWrap.appendChild(h);
+    setTimeout(() => h.remove(), 900);
+  }
+
+  function flashSubtitle(msg, ms = 1600) {
+    if (pokeMsgTimer) clearTimeout(pokeMsgTimer);
+    if (!savedSubtitle) savedSubtitle = subtitle.textContent;
+    subtitle.textContent = msg;
+    pokeMsgTimer = setTimeout(() => {
+      subtitle.textContent = savedSubtitle || subtitles[Math.min(noCount, subtitles.length - 1)];
+      savedSubtitle = "";
+      pokeMsgTimer = null;
+    }, ms);
+  }
+
+  function pokeAlien() {
+    if (!appUnlocked || won) return;
+    const now = Date.now();
+    if (now - lastPokeAt < 350) return;
+    lastPokeAt = now;
+    cardAlien.classList.remove("poke");
+    void cardAlien.offsetWidth;
+    cardAlien.classList.add("poke");
+    cardSvg.classList.add("poked");
+    setTimeout(() => cardSvg.classList.remove("poked"), 700);
+    popReaction(["👽","✨","💫","😳","💚","🛸"][Math.floor(Math.random() * 6)]);
+    if (!isSad) {
+      setMouth(cardAlien, "ooh");
+      setTimeout(() => { if (!isSad && !won) setMouth(cardAlien, "neutral"); }, 500);
+    }
+    flashSubtitle(pokeLines[Math.floor(Math.random() * pokeLines.length)]);
+  }
+
+  /* ---------------- reactive alien: eyes follow pointer + tilt ---------------- */
+  function onPointerMove(e) {
+    if (!appUnlocked || won) return;
+    lookAtPoint(e.clientX, e.clientY);
+  }
+  window.addEventListener("mousemove", onPointerMove);
+  window.addEventListener("touchmove", (e) => {
+    if (e.touches[0]) onPointerMove(e.touches[0]);
+  }, { passive: true });
+
+  charWrap.addEventListener("mouseenter", () => {
+    if (won || isSad) return;
+    setMouth(cardAlien, "grin");
+  });
+  charWrap.addEventListener("mouseleave", () => {
+    if (won) return;
+    if (!isSad) setMouth(cardAlien, "neutral");
+  });
+  charWrap.addEventListener("click", pokeAlien);
+  charWrap.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    pokeAlien();
+  }, { passive: false });
+
+  function popHeart() {
+    popReaction(["💕","💖","💗","💞","🥰"][Math.floor(Math.random()*5)], 4);
+  }
+
+  function reactYesHover() {
+    if (won) return;
+    cardSvg.classList.add("happy");
+    cardSvg.classList.remove("scared");
+    cardAlien.classList.add("happy");
+    cardSvg.style.transform = "scale(1.1) translateY(-6px) rotate(2deg)";
+    setMouth(cardAlien, "grin");
+    const yr = yesBtn.getBoundingClientRect();
+    lookAtPoint(yr.left + yr.width / 2, yr.top + yr.height / 2);
+    popHeart();
+  }
+
+  function reactYesLeave() {
+    if (won) return;
+    cardSvg.classList.remove("happy");
+    cardAlien.classList.remove("happy");
+    cardSvg.style.transform = "";
+    setMouth(cardAlien, isSad ? "frown" : "neutral");
+  }
+
+  function reactNoHover() {
+    if (won || noBtn.classList.contains("runaway")) return;
+    cardSvg.classList.add("scared");
+    cardSvg.classList.remove("happy");
+    cardAlien.classList.remove("happy");
+    cardSvg.style.transform = "rotate(-8deg) scale(0.94) translateX(-4px)";
+    setMouth(cardAlien, "frown");
+    popReaction(["😱","💀","👀","😬"][Math.floor(Math.random() * 4)], 12);
+  }
+
+  function reactNoLeave() {
+    if (won) return;
+    cardSvg.classList.remove("scared");
+    cardSvg.style.transform = "";
+    setMouth(cardAlien, isSad ? "frown" : "neutral");
+  }
+
+  yesBtn.addEventListener("mouseenter", reactYesHover);
+  yesBtn.addEventListener("mouseleave", reactYesLeave);
+  yesBtn.addEventListener("touchstart", () => { reactYesHover(); setTimeout(reactYesLeave, 400); }, { passive: true });
+
+  noBtn.addEventListener("mouseenter", reactNoHover);
+  noBtn.addEventListener("mouseleave", reactNoLeave);
+  noBtn.addEventListener("touchstart", () => {
+    if (noBtn.classList.contains("runaway")) return;
+    reactNoHover();
+    setTimeout(reactNoLeave, 350);
+  }, { passive: true });
+
+  // crying in steps: more tears each rejection
+  function cry() {
+    [41, 57].forEach((left, i) => {
+      const t = document.createElement("span");
+      t.className = "tear show";
+      t.textContent = "💧";
+      t.style.left = left + "%";
+      t.style.top = "44%";
+      t.style.fontSize = "18px";
+      t.style.animationDelay = (i * 0.12) + "s";
+      charWrap.appendChild(t);
+      setTimeout(() => t.remove(), 1400);
+    });
+  }
+
+  function onNo() {
+    if (!appUnlocked) return;
+    noCount++; isSad = true;
+    cry();
+    cardSvg.classList.remove("happy", "poked");
+    cardSvg.classList.add("sad", "scared");
+    cardAlien.classList.remove("happy", "poke");
+    cardAlien.classList.add("sad");
+    setMouth(cardAlien, "frown");
+    cardSvg.style.transform = "rotate(-10deg) scale(0.9)";
+    setTimeout(() => {
+      if (isSad && !won) {
+        cardSvg.classList.remove("scared");
+        cardSvg.style.transform = "";
+      }
+    }, 450);
+    popReaction(["💔","😭","👽💧","🥺"][Math.floor(Math.random() * 4)], 18);
+
+    const qi = Math.min(noCount, questions.length - 1);
+    question.textContent = questions[qi];
+    subtitle.textContent = subtitles[qi];
+    savedSubtitle = subtitles[qi];
+
+    if (noCount >= RUN_AFTER) {
+      hint.textContent = rejectionHints[4];
+      makeNoRunaway(); moveNoButton();
+    } else {
+      hint.textContent = rejectionHints[Math.min(noCount - 1, rejectionHints.length - 2)];
+    }
+  }
+
+  function makeNoRunaway() {
+    if (noBtn.classList.contains("runaway")) return;
+    noBtn.classList.add("runaway");
+    document.body.appendChild(noBtn);
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("touchstart", function(e){ e.preventDefault(); moveNoButton(); }, {passive:false});
+  }
+  function moveNoButton() {
+    const margin = 14;
+    const bw = noBtn.offsetWidth || 110, bh = noBtn.offsetHeight || 56;
+    const maxX = Math.max(margin, window.innerWidth  - bw - margin);
+    const maxY = Math.max(margin, window.innerHeight - bh - margin);
+    const x = margin + Math.random() * (maxX - margin);
+    const y = margin + Math.random() * (maxY - margin);
+    const s = Math.max(0.6, 1 - noCount * 0.04);
+    const rot = (Math.random()*30 - 15).toFixed(0);
+    noBtn.style.left = x + "px"; noBtn.style.top = y + "px";
+    noBtn.style.transform = `rotate(${rot}deg) scale(${s})`;
+  }
+  window.addEventListener("resize", () => {
+    if (!noBtn.classList.contains("runaway")) return;
+    const margin = 14, bw = noBtn.offsetWidth, bh = noBtn.offsetHeight;
+    let x = parseFloat(noBtn.style.left)||0, y = parseFloat(noBtn.style.top)||0;
+    x = Math.min(Math.max(margin, x), window.innerWidth - bw - margin);
+    y = Math.min(Math.max(margin, y), window.innerHeight - bh - margin);
+    noBtn.style.left = x + "px"; noBtn.style.top = y + "px";
+  });
+
+  /* ---------------- YES: cinematic alien date → UFO abduction ---------------- */
+  const sceneBoy  = document.getElementById("sceneBoy");
+  const sceneGirl = document.getElementById("sceneGirl");
+  const sUfo      = document.getElementById("sUfo");
+  const ufoWrap   = document.getElementById("ufoWrap");
+  const sceneStage = document.getElementById("sceneStage");
+  const sceneCaption = document.getElementById("sceneCaption");
+  let sceneTimers = [];
+
+  /* Scene + caption timeline (ms) — longer pacing, strict caption windows */
+  const SCENE_DUR = {
+    enterIn: 2200,
+    flirtTween: 1850,
+    ufoDescent: 3800,
+    ufoHover: 800,
+    abductLift: 5800,
+    exitAfterAbduct: 600
+  };
+
+  const SCENE = {
+    enter: 500,
+    flirt: 5000,
+    flirtHold: 6200,
+    ufo: 10000,
+    ufoPark: 10000 + SCENE_DUR.ufoDescent,
+    beam: 10000 + SCENE_DUR.ufoDescent,
+    abduct: 10000 + SCENE_DUR.ufoDescent + SCENE_DUR.ufoHover,
+    abductDone: 0,
+    exit: 0
+  };
+  SCENE.abductDone = SCENE.abduct + SCENE_DUR.abductLift;
+  SCENE.exit = SCENE.abductDone + SCENE_DUR.exitAfterAbduct;
+  SCENE.enterDone = SCENE.enter + SCENE_DUR.enterIn;
+  SCENE.flirtDone = SCENE.flirtHold + SCENE_DUR.flirtTween;
+
+  const CAP_FADE_MS = 1100;
+  const CAP_GAP_MS = 60;
+
+  /* Strict windows: hide + CAP_GAP_MS → next show */
+  const CAPTION_SCRIPT = [
+    {
+      show: SCENE.enter + Math.round(SCENE_DUR.enterIn * 0.55),
+      hide: SCENE.flirt - CAP_GAP_MS,
+      text: "You said yes… and now I'm literally glowing for you 🥰✨"
+    },
+    {
+      show: SCENE.flirt,
+      hide: SCENE.ufo - CAP_GAP_MS,
+      text: "He's simping. She's blushing. You're the whole reason 💕😏"
+    },
+    {
+      show: SCENE.ufo,
+      hide: SCENE.abduct - CAP_GAP_MS,
+      text: "Your ride's here, cutie — hop in before I miss you 🛸💋"
+    },
+    {
+      show: SCENE.abduct,
+      hide: SCENE.exit - CAP_GAP_MS,
+      text: "Not abduction… just me stealing you forever, babe 🚀💖"
+    }
+  ];
+
+  function buildWinStars() {
+    const sky = document.getElementById("winStars");
+    if (!sky) return;
+    sky.innerHTML = "";
+    delete sky.dataset.built;
+    populateStarField(sky, STAR_COUNTS.win);
+  }
+
+  function startWinShootingStars() {
+    winShootIv = stopShootingLoop(winShootIv, document.getElementById("winShooting"));
+    winShootIv = startShootingLoop(
+      document.getElementById("winShooting"),
+      () => won
+    );
+  }
+
+  function stopWinShootingStars() {
+    winShootIv = stopShootingLoop(winShootIv, document.getElementById("winShooting"));
+  }
+
+  let captionHideTimer = null;
+
+  function showCaption(text, stayMs) {
+    if (captionHideTimer) { clearTimeout(captionHideTimer); captionHideTimer = null; }
+
+    const reveal = () => {
+      sceneCaption.textContent = text;
+      sceneCaption.classList.remove("hide");
+      void sceneCaption.offsetWidth;
+      sceneCaption.classList.add("show");
+      const visibleMs = Math.max(0, stayMs - CAP_FADE_MS);
+      if (visibleMs > 0) captionHideTimer = setTimeout(hideCaption, visibleMs);
+    };
+
+    if (sceneCaption.classList.contains("show")) {
+      sceneCaption.classList.remove("show");
+      sceneCaption.classList.add("hide");
+      setTimeout(reveal, CAP_FADE_MS);
+    } else {
+      sceneCaption.classList.remove("hide", "show");
+      reveal();
+    }
+  }
+  function hideCaption() {
+    if (captionHideTimer) { clearTimeout(captionHideTimer); captionHideTimer = null; }
+    sceneCaption.classList.remove("show");
+    sceneCaption.classList.add("hide");
+  }
+
+  function scheduleSceneCaptions() {
+    CAPTION_SCRIPT.forEach(({ show, hide, text }) => {
+      const stayMs = hide - show;
+      later(() => showCaption(text, stayMs), show);
+    });
+  }
+
+  const winAfterglow = document.getElementById("winAfterglow");
+  const afterglowHeartsField = document.getElementById("afterglowHeartsField");
+  const winScreenEl = document.getElementById("winScreen");
+  let afterglowStarted = false;
+
+  function spawnAfterglowHearts() {
+    if (!afterglowHeartsField) return;
+    afterglowHeartsField.innerHTML = "";
+    const glyphs = ["♥", "💖", "💕", "✨", "💗", "♥"];
+    const n = window.innerWidth < 480 ? 8 : 12;
+    for (let i = 0; i < n; i++) {
+      const el = document.createElement("span");
+      el.className = "float-heart";
+      el.textContent = glyphs[i % glyphs.length];
+      el.style.left = (4 + Math.random() * 92) + "%";
+      el.style.animationDuration = (7 + Math.random() * 9) + "s";
+      el.style.animationDelay = (Math.random() * 5) + "s";
+      el.style.fontSize = (12 + Math.random() * 14) + "px";
+      afterglowHeartsField.appendChild(el);
+    }
+  }
+
+  function restartInfinityRoam() {
+    if (!winAfterglow) return;
+    const motion = winAfterglow.querySelector(".infinity-roamer animateMotion");
+    if (!motion) return;
+    try {
+      motion.beginElement();
+    } catch (_) {
+      const clone = motion.cloneNode(true);
+      motion.replaceWith(clone);
+    }
+  }
+
+  function startWinAfterglow() {
+    if (!winAfterglow || afterglowStarted) return;
+    afterglowStarted = true;
+    spawnAfterglowHearts();
+    winAfterglow.classList.remove("live");
+    void winAfterglow.offsetWidth;
+    winAfterglow.classList.add("live");
+    winAfterglow.setAttribute("aria-hidden", "false");
+    if (winScreenEl) winScreenEl.classList.add("afterglow");
+    restartInfinityRoam();
+  }
+
+  function stopWinAfterglow() {
+    afterglowStarted = false;
+    if (afterglowHeartsField) afterglowHeartsField.innerHTML = "";
+    if (winAfterglow) {
+      winAfterglow.classList.remove("live");
+      winAfterglow.setAttribute("aria-hidden", "true");
+    }
+    if (winScreenEl) winScreenEl.classList.remove("afterglow");
+  }
+
+  function stopWinParty() {
+    stopWinAfterglow();
+    hideCaption();
+    sceneCaption.textContent = "";
+  }
+
+  function onYes() {
+    if (!appUnlocked) return;
+    won = true;
+    cardSvg.style.transform = "";
+    cardEyes.style.transform = "";
+    cardSvg.classList.remove("sad", "scared", "poked"); cardSvg.classList.add("happy");
+    cardAlien.classList.remove("sad", "poke"); cardAlien.classList.add("happy");
+    setMouth(cardAlien, "grin");
+    buildWinStars();
+    startWinShootingStars();
+    document.getElementById("winScreen").classList.add("show");
+    const winTitleEl = document.getElementById("winTitle");
+    if (winTitleEl && noCount >= RUN_AFTER) {
+      winTitleEl.textContent =
+        "Five nos and you STILL couldn't stay away… I knew you liked me 😏👽💜";
+    } else if (winTitleEl) {
+      winTitleEl.textContent = "I knew it, you'd fold eventually… cutie 😏💕";
+    }
+    runScene();
+  }
+
+  function clearTimers() {
+    sceneTimers.forEach(clearTimeout);
+    sceneTimers = [];
+    if (captionHideTimer) { clearTimeout(captionHideTimer); captionHideTimer = null; }
+  }
+  function later(fn, ms) { sceneTimers.push(setTimeout(fn, ms)); }
+
+  const EASE     = "cubic-bezier(0.4, 0, 0.2, 1)";
+  const EASE_IO  = "cubic-bezier(0.42, 0, 0.58, 1)";
+
+  function alienMatrix(el) {
+    const t = getComputedStyle(el).transform;
+    return t && t !== "none" ? new DOMMatrix(t) : new DOMMatrix();
+  }
+
+  function tweenAlien(el, { x, y, scale = 1, rot = 0, duration = 1.4, ease = EASE, opacity }) {
+    el.getAnimations().forEach(a => a.cancel());
+    el.style.transition = `transform ${duration}s ${ease}, opacity ${Math.min(duration * 0.5, 1)}s ease`;
+    el.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale}) rotate(${rot}deg)`;
+    if (opacity !== undefined) el.style.opacity = opacity;
+  }
+
+  function ufoBeamRect() {
+    const r = sUfo.getBoundingClientRect();
+    return {
+      cx: r.left + r.width * 0.5,
+      portal: r.top + r.height * 0.36,
+      bottom: r.top + r.height * 0.88,
+      width: r.width * 0.38
+    };
+  }
+
+  function clearAlienFx(el) {
+    el.classList.remove("in-beam", "abducting");
+    el.getAnimations().forEach(a => a.cancel());
+    el.style.filter = "";
+    el.style.zIndex = "";
+  }
+
+  function abductAlien(el) {
+    const beam = ufoBeamRect();
+    const r = el.getBoundingClientRect();
+    const m = alienMatrix(el);
+    const startX = m.m41, startY = m.m42;
+    const endX = m.m41 + (beam.cx - (r.left + r.width / 2));
+    const endY = m.m42 - Math.max(r.top + r.height * 0.88 - beam.portal, 32);
+    const midX = startX + (endX - startX) * 0.45;
+    const midY = startY - 14;
+
+    el.classList.add("in-beam", "abducting");
+    el.getAnimations().forEach(a => a.cancel());
+    el.style.transition = "none";
+
+    el.animate([
+      { transform: `translate3d(${startX}px, ${startY}px, 0) scale(1)`, opacity: 1 },
+      { transform: `translate3d(${midX}px, ${midY}px, 0) scale(0.88)`, opacity: 1, offset: 0.35 },
+      { transform: `translate3d(${endX}px, ${endY}px, 0) scale(0.07)`, opacity: 0 }
+    ], { duration: SCENE_DUR.abductLift, easing: "cubic-bezier(0.42, 0, 0.22, 1)", fill: "forwards" });
+  }
+
+  function abductBoth() {
+    abductAlien(sceneBoy);
+    abductAlien(sceneGirl);
+  }
+
+  function ufoExitScreen() {
+    ufoWrap.classList.remove("parked");
+    const sceneR = document.getElementById("scene").getBoundingClientRect();
+    const ufoR = sUfo.getBoundingClientRect();
+    const exitY = Math.ceil(ufoR.top - sceneR.top + ufoR.height + 60);
+    sUfo.style.transition = `transform 6s cubic-bezier(0.4, 0, 0.2, 1)`;
+    sUfo.style.opacity = "1";
+    sUfo.style.transform = `translate3d(0, -${exitY}px, 0) scale(0.94) rotate(-1.5deg)`;
+  }
+
+  function runScene() {
+    clearTimers();
+    stopWinAfterglow();
+    setMouth(sceneBoy, "grin");
+    setMouth(sceneGirl, "grin");
+    ufoWrap.classList.remove("parked");
+    clearAlienFx(sceneBoy);
+    clearAlienFx(sceneGirl);
+    hideCaption();
+
+    const sw = sceneStage.offsetWidth || 340;
+    const sh = sceneStage.offsetHeight || 260;
+    const slideX = Math.round(sw * 1.35);
+    const ufoDrop = Math.round(sh * 1.15);
+
+    sceneBoy.style.transition = sceneGirl.style.transition = sUfo.style.transition = "none";
+    sceneBoy.style.transform  = `translateX(-${slideX}px) rotate(-14deg) scale(0.85)`; sceneBoy.style.opacity  = "0";
+    sceneGirl.style.transform = `translateX(${slideX}px) rotate(14deg) scale(0.85)`;  sceneGirl.style.opacity = "0";
+    sUfo.style.transform      = `translateY(-${ufoDrop}px) scale(0.55)`;           sUfo.style.opacity      = "0";
+    void sUfo.offsetWidth;
+
+    scheduleSceneCaptions();
+
+    const enterTweenS = (SCENE_DUR.enterIn / 1000).toFixed(2);
+    const flirtTweenS = (SCENE_DUR.flirtTween / 1000).toFixed(2);
+    const ufoDescentS = (SCENE_DUR.ufoDescent / 1000).toFixed(2);
+    const enterFadeS = Math.min(1.35, SCENE_DUR.enterIn / 1000 * 0.55).toFixed(2);
+
+    // Phase 1 — aliens slide in
+    later(() => {
+      sceneBoy.style.transition  = `transform ${enterTweenS}s ${EASE}, opacity ${enterFadeS}s ease`;
+      sceneGirl.style.transition = `transform ${enterTweenS}s ${EASE}, opacity ${enterFadeS}s ease`;
+      sceneBoy.style.transform  = "translate3d(0, 0, 0) rotate(0deg) scale(1)"; sceneBoy.style.opacity  = "1";
+      sceneGirl.style.transform = "translate3d(0, 0, 0) rotate(0deg) scale(1)"; sceneGirl.style.opacity = "1";
+    }, SCENE.enter);
+
+    // Phase 1b — meet
+    later(() => {
+      sceneBoy.style.transition  = `transform ${flirtTweenS}s ${EASE}`;
+      sceneGirl.style.transition = `transform ${flirtTweenS}s ${EASE}`;
+      sceneBoy.style.transform = "translateX(6px) translateY(-10px) rotate(4deg) scale(1.04)";
+      sceneGirl.style.transform = "translateX(-4px) translateY(-14px) rotate(-6deg) scale(1.08)";
+      setMouth(sceneBoy, "grin");
+      setMouth(sceneGirl, "ooh");
+    }, SCENE.flirt);
+    later(() => {
+      sceneBoy.style.transition  = `transform ${flirtTweenS}s ${EASE}`;
+      sceneGirl.style.transition = `transform ${flirtTweenS}s ${EASE}`;
+      sceneBoy.style.transform = "translateY(-4px) rotate(-2deg)";
+      sceneGirl.style.transform = "translateY(-2px) rotate(2deg)";
+      setMouth(sceneGirl, "grin");
+    }, SCENE.flirtHold);
+
+    // Phase 2 — UFO descends
+    later(() => {
+      const ufoFadeS = Math.min(1.6, SCENE_DUR.ufoDescent / 1000 * 0.42).toFixed(2);
+      sUfo.style.transition = `transform ${ufoDescentS}s ${EASE_IO}, opacity ${ufoFadeS}s ease`;
+      sUfo.style.transform = "translate3d(0, 0, 0) scale(1)"; sUfo.style.opacity = "1";
+      later(() => ufoWrap.classList.add("parked"), SCENE_DUR.ufoDescent);
+    }, SCENE.ufo);
+
+    // Phase 3 — beam + smooth abduction
+    later(() => {
+      setMouth(sceneBoy, "ooh");
+      setMouth(sceneGirl, "ooh");
+    }, SCENE.beam);
+    later(() => abductBoth(), SCENE.abduct);
+
+    // Phase 4 — fly off, then endless cute loop
+    later(() => {
+      ufoExitScreen();
+      later(startWinAfterglow, 2100);
+    }, SCENE.exit);
+  }
+
+  const DEFAULT_WIN_TITLE = "I knew it, you'd fold eventually… cutie 😏💕";
+
+  function reset() {
+    if (!appUnlocked) return;
+    clearTimers();
+    stopWinParty();
+    noCount = 0; isSad = false; won = false;
+    if (pokeMsgTimer) { clearTimeout(pokeMsgTimer); pokeMsgTimer = null; }
+    savedSubtitle = "";
+
+    const winTitleEl = document.getElementById("winTitle");
+    if (winTitleEl) winTitleEl.textContent = DEFAULT_WIN_TITLE;
+
+    if (winScreenEl) {
+      winScreenEl.classList.remove("show", "afterglow", "subtitles-done");
+    }
+
+    cardSvg.className = "alien-svg boy";
+    cardAlien.className = "alien-host";
+    cardSvg.classList.remove("happy", "scared", "poked", "sad");
+    cardSvg.style.transform = "";
+    cardEyes.style.transform = "";
+    setMouth(cardAlien, "neutral");
+    question.textContent = questions[0];
+    subtitle.textContent = subtitles[0];
+    hint.textContent = "";
+    yesBtn.style.transform = "";
+
+    noBtn.className = "";
+    noBtn.id = "noBtn";
+    noBtn.style.cssText = "";
+    document.getElementById("buttons").appendChild(noBtn);
+
+    stopWinShootingStars();
+    const winStars = document.getElementById("winStars");
+    if (winStars) {
+      winStars.innerHTML = "";
+      delete winStars.dataset.built;
+    }
+
+    ufoWrap.classList.remove("parked");
+    clearAlienFx(sceneBoy);
+    clearAlienFx(sceneGirl);
+    const ufoDrop = Math.round((sceneStage.offsetHeight || 260) * 1.15);
+    sUfo.style.transition = "none";
+    sUfo.style.transform = `translate3d(0, -${ufoDrop}px, 0) scale(0.55)`;
+    sUfo.style.opacity = "0";
+    sceneBoy.style.transform = "";
+    sceneBoy.style.opacity = "0";
+    sceneGirl.style.transform = "";
+    sceneGirl.style.opacity = "0";
+    hideCaption();
+    sceneCaption.textContent = "";
+
+    if (!mainShootIv) {
+      mainShootIv = startShootingLoop(
+        document.getElementById("mainShooting"),
+        () => appUnlocked && !won
+      );
+    }
+  }
+
+  yesBtn.addEventListener("click", onYes);
+  noBtn.addEventListener("click", onNo);
+  const replayBtn = document.getElementById("replayBtn");
+  if (replayBtn) {
+    replayBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      reset();
+    });
+  }
+
+  } /* initMainApp */
+</script>
+</body>
+</html>
