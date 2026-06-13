@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=0.80, maximum-scale=1.0" />
+<meta name="viewport" content="width=1100" />
 <title>Will You Go On A Date With Me? 💕</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1125,39 +1125,12 @@
   .win-afterglow.live .ag-d3 { animation-delay: 6.8s; }
   .win-afterglow.live .ag-d4 { animation-delay: 8.8s; }
 
-  @media (max-width: 480px) {
-    h1 { font-size: 25px; }
-    .char-wrap { width: 200px; height: 220px; } .alien-host { width: 142px; }
-    .halo { width: 168px; height: 168px; } .sparkle-ring { width: 190px; height: 190px; }
-    #yesBtn, #noBtn { padding: 14px 30px; font-size: 18px; }
-    .scene-stage { width: min(300px, 84vw); height: min(230px, 30vh); transform: translate(-50%, -52%); }
-    .scene-caption { top: 14%; font-size: 15px; }
-    .infinity-neon-wrap { width: min(90vw, 290px); }
-    .afterglow-prelude { font-size: clamp(13px, 3.1vw, 17px); }
-    .afterglow-prelude2, .afterglow-sub { font-size: clamp(12px, 2.95vw, 16px); }
-    .afterglow-vow { font-size: 17px; }
-    .afterglow-sign { font-size: 21px; }
-    .afterglow-tag { font-size: clamp(10px, 2.05vw, 13px); }
-    .infinity-stage { gap: 12px; padding: 20px 10px 96px; }
-    .infinity-neon-wrap { margin: 16px 0; }
-    .ag-line, .afterglow-sub { max-width: 94vw; }
-  }
-  @media (max-height: 720px) {
-    .infinity-stage { gap: 10px; padding-top: 16px; padding-bottom: 88px; }
-    .infinity-neon-wrap { width: min(78vw, 270px); }
-    .afterglow-prelude, .afterglow-vow { font-size: clamp(15px, 3.4vw, 22px); }
-    .afterglow-prelude2, .afterglow-sub { font-size: clamp(14px, 3.1vw, 20px); }
-    .afterglow-sign { font-size: clamp(20px, 4.4vw, 27px); }
-    .win-chips { gap: 6px; }
-    .win-chips span { padding: 5px 12px; font-size: 11px; }
-    .trademark { font-size: 13px; }
-  }
-
-  @media (max-width: 768px) {
-    .card { width: min(94vw, 420px); padding: 28px 22px 24px; }
-    .login-card { width: min(94vw, 420px); padding: 28px 22px 22px; }
-    .char-wrap { width: min(220px, 58vw); height: min(240px, 62vw); }
-    .alien-host { width: min(150px, 40vw); }
+  /* Keep the desktop composition compact instead of filling the viewport. */
+  @media (min-width: 769px) {
+    .card,
+    .login-card {
+      zoom: 0.82;
+    }
   }
 
   @supports (padding: max(0px)) {
@@ -2411,7 +2384,7 @@
     if (!afterglowHeartsField) return;
     afterglowHeartsField.innerHTML = "";
     const glyphs = ["♥", "💖", "💕", "✨", "💗", "♥"];
-    const n = window.innerWidth < 480 ? 8 : 12;
+    const n = 12;
     for (let i = 0; i < n; i++) {
       const el = document.createElement("span");
       el.className = "float-heart";
